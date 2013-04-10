@@ -56,6 +56,9 @@
       <Name>RiftDotNet.x64</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="OCULUS VR LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
