@@ -17,6 +17,14 @@ namespace RiftDotNet
 		/// </summary>
 		private static IFactory _platformFactory;
 
+		/// <summary>
+		/// For testing purposes only.
+		/// </summary>
+		public static IFactory PlatformFactory
+		{
+			get{ return _platformFactory; }
+		}
+
 		static Factory()
 		{
 			// Due the way the JIT-compiler works, the methods are not compiled unless executed.

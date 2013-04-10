@@ -18,29 +18,6 @@ namespace RiftDotNet.Test
 		}
 
 		[Test]
-		public void TestSensorDevices()
-		{
-// ReSharper disable PossibleMultipleEnumeration
-
-			using (var mgr = Factory.CreateDeviceManager())
-			{
-				var devices = mgr.SensorDevices;
-				devices.Should().NotBeNull();
-				foreach (var desc in devices)
-				{
-					desc.Should().NotBeNull();
-					desc.IsAvailable.Should().BeTrue();
-					desc.IsCreated.Should().BeFalse();
-
-					var sensor = desc.CreateDevice();
-					sensor.Should().NotBeNull();
-				}
-			}
-
-// ReSharper restore PossibleMultipleEnumeration
-		}
-
-		[Test]
 		public void TestHMDDevices()
 		{
 			// ReSharper disable PossibleMultipleEnumeration
@@ -61,6 +38,29 @@ namespace RiftDotNet.Test
 			}
 
 			// ReSharper restore PossibleMultipleEnumeration
+		}
+
+		[Test]
+		public void TestSensorDevices()
+		{
+// ReSharper disable PossibleMultipleEnumeration
+
+			using (var mgr = Factory.CreateDeviceManager())
+			{
+				var devices = mgr.SensorDevices;
+				devices.Should().NotBeNull();
+				foreach (var desc in devices)
+				{
+					desc.Should().NotBeNull();
+					desc.IsAvailable.Should().BeTrue();
+					desc.IsCreated.Should().BeFalse();
+
+					var sensor = desc.CreateDevice();
+					sensor.Should().NotBeNull();
+				}
+			}
+
+// ReSharper restore PossibleMultipleEnumeration
 		}
 	}
 }

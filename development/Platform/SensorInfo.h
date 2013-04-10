@@ -31,6 +31,13 @@ namespace RiftDotNet
 
 		public:
 
+			SensorInfo()
+				: DeviceInfo(DeviceType::Sensor)
+				, _vendorId(0)
+				, _productId(0)
+				, _serialNumber(nullptr)
+			{}
+
 			SensorInfo(const OVR::SensorInfo& native)
 				: DeviceInfo(native)
 				, _vendorId(native.VendorId)

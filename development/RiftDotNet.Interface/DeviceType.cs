@@ -7,6 +7,5 @@
 		HMD = 2,
 		Sensor = 3,
 		LatencyTester = 4,
-		All = 0xFF,
 	};
 }

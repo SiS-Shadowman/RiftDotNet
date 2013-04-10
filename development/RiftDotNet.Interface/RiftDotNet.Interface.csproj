@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RiftDotNet</RootNamespace>
     <AssemblyName>RiftDotNet.Interface</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NewCode\shared\bin\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\NewCode\shared\bin\SharpDX.dll</HintPath>
     </Reference>
@@ -54,6 +59,7 @@
     <Compile Include="ISensorDevice.cs" />
     <Compile Include="ISensorFusion.cs" />
     <Compile Include="ISensorInfo.cs" />
+    <Compile Include="ITestingFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorRange.cs" />
   </ItemGroup>

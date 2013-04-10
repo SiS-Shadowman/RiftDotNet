@@ -29,6 +29,23 @@ namespace RiftDotNet
 			property int DesktopY { virtual int get() { return _desktopY; } }
 			property Object^ DisplayDevice { virtual Object^ get() { return _displayDevice; } }
 
+			HMDInfo()
+				: DeviceInfo(DeviceType::HMD)
+				, _hResolution(0)
+				, _vResolution(0)
+				, _hScreenSize(0)
+				, _vScreenSize(0)
+				, _vScreenCenter(0)
+				, _eyeToScreenDistance(0)
+				, _lensSeparationDistance(0)
+				, _interpupillaryDistance(0)
+				, _desktopX(0)
+				, _desktopY(0)
+				, _displayDevice(nullptr)
+			{
+				_distortionK = gcnew array<float>(4);
+			}
+
 		private:
 
 			const unsigned int _hResolution, _vResolution;

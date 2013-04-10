@@ -9,7 +9,6 @@ namespace RiftDotNet
 	/// extensive device info.
 	/// </summary>
 	public interface IDeviceInfo
-		: IDisposable
 	{
 		/// <summary>
 		/// // Type of device for which DeviceInfo is intended.

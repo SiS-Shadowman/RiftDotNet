@@ -22,9 +22,6 @@ namespace RiftDotNet
 			property String^ Manufacturer { virtual String^ get() { return _manufacturer; } }
 			property UINT Version { virtual UINT get() { return _version; } }
 
-			virtual ~DeviceInfo()
-			{}
-
 		private:
 
 			const DeviceType _infoClassType;
@@ -34,6 +31,17 @@ namespace RiftDotNet
 			const UINT _version;
 
 		protected:
+
+			DeviceInfo(DeviceType type)
+				: _infoClassType(DeviceType::None)
+				, _type(type)
+				, _productName(nullptr)
+				, _manufacturer(nullptr)
+				, _version(0)
+			{
+				if (type == DeviceType::None)
+					throw gcnew ArgumentException("DeviceType.None is not allowed");
+			}
 
 			DeviceInfo(const OVR::DeviceInfo& native)
 				: _infoClassType((DeviceType)native.InfoClassType)
