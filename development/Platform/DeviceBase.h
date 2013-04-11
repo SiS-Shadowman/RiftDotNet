@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <OVR_Device.h>
 
 #include "RiftDotNet.h"
@@ -13,6 +14,8 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
+		class MessageHandler;
+
 		public ref class DeviceBase abstract
 			: public IDevice
 		{
@@ -26,13 +29,7 @@ namespace RiftDotNet
 				_native = native;
 			}
 
-			~DeviceBase()
-			{
-				if (_native != nullptr)
-					_native->Release();
-
-				_native = nullptr;
-			}
+			~DeviceBase();
 
 			property DeviceType Type
 			{
@@ -47,6 +44,13 @@ namespace RiftDotNet
 					return Create(native);
 				}
 			}
+
+			property RiftDotNet::MessageHandler^ MessageHandler
+			{
+				virtual RiftDotNet::MessageHandler^ get();
+				virtual void set(RiftDotNet::MessageHandler^ handler);
+			}
+
 
 			virtual bool Equals(Object^ other) override sealed
 			{
@@ -108,6 +112,7 @@ namespace RiftDotNet
 		private:
 
 			OVR::DeviceBase* _native;
+			RiftDotNet::Platform::MessageHandler* _handler;
 		};
 	}
 }

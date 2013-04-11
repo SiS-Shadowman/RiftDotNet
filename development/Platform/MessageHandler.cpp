@@ -6,6 +6,7 @@
 #include "MessageLatencyTestColorDetected.h"
 #include "MessageLatencyTestSamples.h"
 #include "MessageLatencyTestStarted.h"
+#include "MessageHandlerImpl.h"
 
 
 
@@ -14,6 +15,14 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
+		MessageHandler::MessageHandler(MessageHandlerImpl^ impl)
+		{
+			if (impl == nullptr)
+				throw gcnew ArgumentNullException("impl");
+
+			_impl = impl;
+		}
+
 		IMessage^ MessageHandler::CreateMessage(const OVR::Message& message)
 		{
 			switch(message.Type)

@@ -6,6 +6,7 @@
 #include "RiftDotNet.h"
 #include "Log4Net.h"
 #include "Helper.h"
+#include "MessageHandlerImpl.h"
 
 using namespace System;
 
@@ -16,23 +17,18 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
+		ref class MessageHandlerImpl;
+
 		/// <summary>
-		/// This class wraps a managed IMessageHandler implementation,
-		/// allowing callbacks from native code to be handled in managed one.
+		/// Implementation of the native OVR::MessageHandler interface.
+		/// Provides the callbacks to a managed IMessageHandler implementation object.
 		/// </summary>
 		public class MessageHandler
 			: public OVR::MessageHandler
 		{
 		public:
 
-			MessageHandler(RiftDotNet::MessageHandler^ impl)
-			{
-				if (impl == nullptr)
-					throw gcnew ArgumentNullException("impl");
-
-				_impl = impl;
-				_callback = gcnew MessageHandlerCallback(this, impl);
-			}
+			MessageHandler(MessageHandlerImpl^ impl);
 
 			~MessageHandler()
 			{
@@ -58,58 +54,29 @@ namespace RiftDotNet
 			{
 				try
 				{
-					_impl->SupportsMessageType(Helper::FromNative(type));
+					return _impl->SupportsMessageType(Helper::FromNative(type));
 				}
 				catch(Exception^ e)
 				{
 					Rift::Log->ErrorFormat("Caught exception in IMessageHandler::SupportsMessageType, ignoring it: {0}", e);
 				}
+
+				return false;
+			}
+
+			/// Obtains a reference to the actual .NET IMessageHandler implementation
+			MessageHandlerImpl^ ManagedHandler()
+			{
+				return _impl;
 			}
 
 		private:
 
 			IMessage^ CreateMessage(const OVR::Message& message);
 
-			ref class MessageHandlerCallback sealed
-			{
-			public:
-
-				MessageHandlerCallback(MessageHandler* native, RiftDotNet::MessageHandler^ managed)
-				{
-					_native = native;
-					_managed = managed;
-
-					_managed->IsInstalledCallback = gcnew Func<bool>(this, &MessageHandlerCallback::IsHandlerInstalled);
-					_managed->RemoveHandlerFromDevicesCallback = gcnew Action(this, &MessageHandlerCallback::RemoveHandlerFromDevices);
-				}
-
-				~MessageHandlerCallback()
-				{
-				
-				}
-
-			private:
-
-				bool IsHandlerInstalled()
-				{
-					return _native->IsHandlerInstalled();
-				}
-
-				void RemoveHandlerFromDevices()
-				{
-					_native->RemoveHandlerFromDevices();
-				}
-
-			private:
-
-				MessageHandler* _native ;
-				RiftDotNet::MessageHandler^ _managed;
-			};
-
 		private:
 
-			gcroot<RiftDotNet::MessageHandler^> _impl;
-			gcroot<MessageHandlerCallback^> _callback;
+			gcroot<MessageHandlerImpl^> _impl;
 		};
 	}
 }

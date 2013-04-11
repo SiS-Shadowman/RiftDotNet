@@ -1,41 +1,52 @@
-﻿using System;
-
-namespace RiftDotNet
+﻿namespace RiftDotNet
 {
+	/// <summary>
+	///     This class must be inherited from in order to install custom
+	///     message handlers on IDevice objects.
+	/// </summary>
 	public abstract class MessageHandler
 		: IMessageHandler
 	{
+		/// <summary>
+		///     This would be internal, but adding a friend-relationship
+		///     to a c++/cli assembly is a nightmare...
+		/// </summary>
+		/// <remarks>
+		///     Please don't fuck with this.
+		/// </remarks>
+		public IMessageHandler Impl;
+
 		#region IMessageHandler Members
 
-		public abstract void Dispose();
+		public virtual void Dispose()
+		{
+			RemoveHandlerFromDevices();
+			Impl = null;
+		}
 
 		public bool IsInstalled
 		{
 			get
 			{
-				var tmp = IsInstalledCallback;
-				if (tmp == null)
-					return false;
+				if (Impl != null)
+					return Impl.IsInstalled;
 
-				return tmp();
+				return false;
 			}
 		}
 
 		public void RemoveHandlerFromDevices()
 		{
-			var tmp = RemoveHandlerFromDevicesCallback;
-			if (tmp == null)
-				return;
-
-			tmp();
+			if (Impl != null)
+			{
+				Impl.Dispose();
+				Impl = null;
+			}
 		}
 
 		public abstract void OnMessage(IMessage message);
 		public abstract bool SupportsMessageType(MessageType type);
 
 		#endregion
-
-		public Func<bool> IsInstalledCallback;
-		public Action RemoveHandlerFromDevicesCallback;
 	}
 }

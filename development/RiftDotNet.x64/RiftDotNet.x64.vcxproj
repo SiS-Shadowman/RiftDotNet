@@ -138,6 +138,8 @@
     <ClCompile Include="..\Platform\AssemblyInfo.cpp" />
     <ClCompile Include="..\Platform\DeviceBase.cpp" />
     <ClCompile Include="..\Platform\DeviceHandle.cpp" />
+    <ClCompile Include="..\Platform\MessageHandler.cpp" />
+    <ClCompile Include="..\Platform\MessageHandlerImpl.cpp" />
     <ClCompile Include="..\Platform\RitDotNet.cpp" />
     <ClCompile Include="..\Platform\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -160,6 +162,7 @@
     <ClInclude Include="..\Platform\MessageBodyFrame.h" />
     <ClInclude Include="..\Platform\MessageDeviceStatus.h" />
     <ClInclude Include="..\Platform\MessageHandler.h" />
+    <ClInclude Include="..\Platform\MessageHandlerImpl.h" />
     <ClInclude Include="..\Platform\MessageLatencyTestButton.h" />
     <ClInclude Include="..\Platform\MessageLatencyTestColorDetected.h" />
     <ClInclude Include="..\Platform\MessageLatencyTestSamples.h" />

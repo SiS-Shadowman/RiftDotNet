@@ -29,5 +29,10 @@ namespace RiftDotNet
 		/// TOOD: Explain parent-child relationship
 		/// </summary>
 		IDevice Parent { get; }
+
+		/// <summary>
+		/// The message handler installed on this device.
+		/// </summary>
+		MessageHandler MessageHandler { get; set; }
 	}
 }

@@ -22,7 +22,7 @@ namespace RiftDotNet
 				: Message(message)
 			{
 				auto samples = message.Samples;
-				_samples = gcnew array<Color>(samples.GetSize());
+				_samples = gcnew array<Color>((int)samples.GetSize());
 				for(int i = 0; i < _samples->Length; ++i)
 				{
 					_samples[i] = Helper::FromNative(samples[i]);
