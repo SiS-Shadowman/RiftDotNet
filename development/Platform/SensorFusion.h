@@ -26,8 +26,14 @@ namespace RiftDotNet
 
 			SensorFusion(ISensorDevice^ device)
 			{
-				auto sensor = device != nullptr ? ((SensorDevice^)device)->Native : nullptr;
-				_native = new OVR::SensorFusion(sensor);
+				if (device != nullptr)
+				{
+					_native = new OVR::SensorFusion(((SensorDevice^)device)->Native);
+				}
+				else
+				{
+					_native = new OVR::SensorFusion();
+				}
 			}
 
 			~SensorFusion()

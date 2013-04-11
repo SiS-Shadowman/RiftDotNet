@@ -48,6 +48,41 @@ namespace RiftDotNet
 				}
 			}
 
+			virtual bool Equals(Object^ other) override sealed
+			{
+				if (other == nullptr)
+					return false;
+
+				auto tmp = dynamic_cast<DeviceBase^>(other);
+				if (tmp == nullptr)
+					return false;
+
+				// For now, I will assume that the ver same OVR::DeviceBase pointer
+				// is used for the same device. But maybe we need to compare the device
+				// id or something similar...
+				return _native == tmp->_native;
+			}
+
+			virtual int GetHashCode() override sealed
+			{
+#ifdef _WIN64
+				// TODO: Maybe use boost hashing?
+				auto value = reinterpret_cast<unsigned long long>(_native);
+				auto upper = (int)((value & 0xFFFFFFFF00000000) >> 32);
+				auto lower = (int)(value & 0x00000000FFFFFFFF);
+				auto hashed = upper ^ lower;
+				return hashed;
+#else
+				static_assert(sizeof(void*) == 4, "Unknown platform");
+				return reinterpret_cast<int>(_native);
+#endif
+			}
+
+			virtual bool Equals(IDevice^ other) sealed
+			{
+				return Equals((Object^)other);
+			}
+
 		internal:
 
 			static DeviceBase^ Create(OVR::DeviceBase* native);

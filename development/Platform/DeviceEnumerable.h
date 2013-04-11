@@ -16,9 +16,11 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
-		generic <typename T> where T : DeviceBase
+		generic <typename TDevice, typename TInfo>
+		where TDevice : IDevice
+		where TInfo : IDeviceInfo
 		public ref class DeviceEnumerable
-			: public IEnumerable<TypedDeviceHandle<T>^>
+			: public IEnumerable<TypedDeviceHandle<TDevice,TInfo>^>
 		{
 		public:
 
@@ -33,7 +35,7 @@ namespace RiftDotNet
 				_native = nullptr;
 			}
 
-			virtual IEnumerator<TypedDeviceHandle<T>^>^ GetEnumerator()
+			virtual IEnumerator<TypedDeviceHandle<TDevice,TInfo>^>^ GetEnumerator()
 			{
 				return gcnew Enumerator(new OVR::DeviceEnumerator<>(*_native));
 			}
@@ -46,7 +48,7 @@ namespace RiftDotNet
 		private:
 
 			ref class Enumerator sealed
-				: public IEnumerator<TypedDeviceHandle<T>^>
+				: public IEnumerator<TypedDeviceHandle<TDevice,TInfo>^>
 			{
 			public:
 
@@ -61,8 +63,8 @@ namespace RiftDotNet
 					_native = nullptr;
 				}
 
-				property TypedDeviceHandle<T>^ Current { 
-					virtual TypedDeviceHandle<T>^ get() {
+				property TypedDeviceHandle<TDevice,TInfo>^ Current { 
+					virtual TypedDeviceHandle<TDevice,TInfo>^ get() {
 						auto type = (DeviceType)_native->GetType();
 						if (type == DeviceType::None)
 						{
@@ -71,7 +73,7 @@ namespace RiftDotNet
 
 						// It's important that we create a copy of the *current* state of the
 						// enumeration, otherwise Next() is going to influence 
-						return gcnew TypedDeviceHandle<T>(new OVR::DeviceHandle(*_native));
+						return gcnew TypedDeviceHandle<TDevice,TInfo>(new OVR::DeviceHandle(*_native));
 					}
 				};
 

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "RiftDotNet.h"
 #include "DeviceHandle.h"
 
-#include "RiftDotNet.h"
 
 
 
@@ -12,16 +12,18 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
-		generic <typename T> where T : IDevice
+		generic <typename TDevice, typename TInfo>
+		where TDevice : IDevice
+		where TInfo : IDeviceInfo
 		public ref class TypedDeviceHandle sealed
 			: public DeviceHandle
-			, public IDeviceHandle<T>
+			, public IDeviceHandle<TDevice, TInfo>
 		{
 		public:
 
 			TypedDeviceHandle(OVR::DeviceHandle* native)
 				: DeviceHandle(native)
-				, _type(T::typeid)
+				, _type(TDevice::typeid)
 			{
 				Type^ type = GetType((RiftDotNet::DeviceType)native->GetType());
 				if (_type != type)
@@ -32,9 +34,17 @@ namespace RiftDotNet
 
 			static Type^ GetType(RiftDotNet::DeviceType type);
 
-			virtual T CreateDevice() new
+			virtual TDevice CreateDevice() new
 			{
-				return DeviceBase::Create<T>(Native->CreateDevice());
+				return DeviceBase::Create<TDevice>(Native->CreateDevice());
+			}
+
+			property TInfo DeviceInfo
+			{
+				virtual TInfo get() new
+				{
+					return (TInfo)DeviceHandle::DeviceInfo;
+				};
 			}
 
 		private:

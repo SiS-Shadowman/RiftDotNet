@@ -12,6 +12,11 @@ namespace RiftDotNet
 	public static class Factory
 	{
 		/// <summary>
+		///    Hack to load the c++/cli assembly from its embedded resource in this assembly.
+		/// </summary>
+		private static readonly EmbeddedAssemblyLoader AssemblyLoader;
+
+		/// <summary>
 		///     The actual factory corresponding to the platform this code is currently
 		///     executed on. The actual implementation is written in c++\cli.
 		/// </summary>
@@ -27,6 +32,9 @@ namespace RiftDotNet
 
 		static Factory()
 		{
+			// So that we can load the assembly from the embedded resource
+			AssemblyLoader = new EmbeddedAssemblyLoader();
+
 			// Due the way the JIT-compiler works, the methods are not compiled unless executed.
 			// This also means that the referenced assemblies are not loaded before, hence this works.
 			// However it will fail horribly if microsoft decides to change the rules for its jit
@@ -48,12 +56,12 @@ namespace RiftDotNet
 
 		private static void Loadx64()
 		{
-			_platformFactory = new x64.Factory();
+			_platformFactory = x64.Factory.Instance;
 		}
 
 		private static void LoadWin32()
 		{
-			_platformFactory = new Win32.Factory();
+			_platformFactory = Win32.Factory.Instance;
 		}
 
 		/// <summary>
@@ -82,7 +90,7 @@ namespace RiftDotNet
 		/// <param name="sensorDevice">The sensor device who's input is to be processed</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentNullException">In case null is passed for the sensor device</exception>
-		public static ISensorFusion CreateSensorFusion(ISensorDevice sensorDevice)
+		public static ISensorFusion CreateSensorFusion(ISensorDevice sensorDevice = null)
 		{
 			return _platformFactory.CreateSensorFusion(sensorDevice);
 		}

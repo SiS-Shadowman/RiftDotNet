@@ -15,7 +15,7 @@ namespace RiftDotNet
 			, public IHMDInfo
 		{
 		public:
-		
+
 			property unsigned int HResolution { virtual unsigned int get() { return _hResolution; } }
 			property unsigned int VResolution  { virtual unsigned int get() { return _vResolution; } }
 			property float     HScreenSize { virtual float get() { return _hScreenSize; } }
@@ -46,18 +46,6 @@ namespace RiftDotNet
 				_distortionK = gcnew array<float>(4);
 			}
 
-		private:
-
-			const unsigned int _hResolution, _vResolution;
-			const float     _hScreenSize, _vScreenSize;
-			const float     _vScreenCenter;
-			const float     _eyeToScreenDistance;
-			const float     _lensSeparationDistance;
-			const float     _interpupillaryDistance;
-			array<float>^ _distortionK;
-			const int       _desktopX, _desktopY;
-			Object^ _displayDevice;
-
 			HMDInfo(const OVR::HMDInfo& native)
 				: DeviceInfo(native)
 				, _hResolution(native.HResolution)
@@ -78,6 +66,18 @@ namespace RiftDotNet
 				DistortionK[2] = native.DistortionK[2];
 				DistortionK[3] = native.DistortionK[3];
 			}
+
+		private:
+
+			const unsigned int _hResolution, _vResolution;
+			const float     _hScreenSize, _vScreenSize;
+			const float     _vScreenCenter;
+			const float     _eyeToScreenDistance;
+			const float     _lensSeparationDistance;
+			const float     _interpupillaryDistance;
+			array<float>^ _distortionK;
+			const int       _desktopX, _desktopY;
+			Object^ _displayDevice;
 		};
 	}
 }

@@ -46,7 +46,10 @@ namespace RiftDotNet
 
 				virtual void set(SensorRange range)
 				{
-					_native->SetRange(Helper::ToNative(range));
+					if (!_native->SetRange(Helper::ToNative(range)))
+					{
+						throw gcnew Exception("Unable to change the SensorRange: Maybe the parameters are out of range?");
+					}
 				}
 			}
 

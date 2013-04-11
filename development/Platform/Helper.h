@@ -4,6 +4,8 @@
 
 #include "RiftDotNet.h"
 
+using namespace System;
+
 
 
 
@@ -14,6 +16,47 @@ namespace RiftDotNet
 		ref class Helper
 		{
 		public:
+
+			static SharpDX::Color FromNative(OVR::Color color)
+			{
+				return SharpDX::Color(color.R, color.G, color.B, color.A);
+			}
+
+			static MessageType FromNative(OVR::MessageType type)
+			{
+				switch(type)
+				{
+				case OVR::Message_None:
+					return MessageType::None;
+
+				case OVR::Message_BodyFrame:
+					return MessageType::BodyFrame;
+
+				case OVR::Message_DeviceAdded:
+					return MessageType::DeviceAdded;
+
+				case OVR::Message_DeviceRemoved:
+					return MessageType::DeviceRemoved;
+
+				case OVR::Message_LatencyTestColorDetected:
+					return MessageType::LatencyTestColorDetected;
+
+				case OVR::Message_LatencyTestSamples:
+					return MessageType::LatencyTestSamples;
+
+				case OVR::Message_LatencyTestStarted:
+					break;
+
+				case OVR::Message_LatencyTestButton:
+					return MessageType::LatencyTestButton;
+
+				default:
+					throw gcnew ArgumentException(String::Format("Unknown message type: {0}", (int)type));
+				}
+
+				// Why does the compiler not detect the exception?!
+				return MessageType::None;
+			}
 
 			static OVR::SensorRange ToNative(SensorRange range)
 			{

@@ -12,8 +12,12 @@ namespace RiftDotNet
 	///   - Device is resources are cleaned up when it is Released, although its handles
 	///     may survive longer if referenced.
 	/// </summary>
+	/// <remarks>
+	/// Two IDevice instances are considered equal if they describe the same (physical) device.
+	/// </remarks>
 	public interface IDevice
 		: IDisposable
+		, IEquatable<IDevice>
 	{
 		/// <summary>
 		/// The actual type of device this is.

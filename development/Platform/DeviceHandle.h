@@ -2,6 +2,7 @@
 
 #include <OVR_DeviceHandle.h>
 
+#include "RiftDotNet.h"
 #include "DeviceBase.h"
 
 using namespace System;
@@ -34,20 +35,25 @@ namespace RiftDotNet
 
 			property bool IsCreated
 			{
-				virtual bool get() { return _native->IsCreated(); }
+				virtual bool get() sealed { return _native->IsCreated(); }
 			}
 
 			property bool IsAvailable
 			{
-				virtual bool get() { return _native->IsAvailable(); }
+				virtual bool get() sealed { return _native->IsAvailable(); }
 			}
 
 			property DeviceType DeviceType
 			{
-				virtual RiftDotNet::DeviceType get() { return (RiftDotNet::DeviceType)_native->GetType(); }
+				virtual RiftDotNet::DeviceType get() sealed { return (RiftDotNet::DeviceType)_native->GetType(); }
 			}
 
-			virtual IDevice^ CreateDevice()
+			property IDeviceInfo^ DeviceInfo
+			{
+				virtual IDeviceInfo^ get() sealed;
+			}
+
+			virtual IDevice^ CreateDevice() sealed
 			{
 				return DeviceBase::Create(_native->CreateDevice());
 			}
@@ -55,6 +61,10 @@ namespace RiftDotNet
 		protected:
 
 			property OVR::DeviceHandle* Native { OVR::DeviceHandle* get() { return _native; } }
+
+		private:
+
+			void GetDeviceInfo(OVR::DeviceInfo& info);
 
 		private:
 

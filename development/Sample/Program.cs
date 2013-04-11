@@ -13,6 +13,8 @@ namespace Sample
 		private static void Main(string[] args)
 		{
 			var manager = Factory.CreateDeviceManager();
+			var fusion = Factory.CreateSensorFusion();
+
 			var devices = manager.HMDDevices;
 			var device = devices[0];
 		}

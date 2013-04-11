@@ -26,7 +26,6 @@ namespace RiftDotNet
 
 			static DeviceManager^ Create()
 			{
-				SystemInitializer();
 				auto native = OVR::DeviceManager::Create();
 				return gcnew DeviceManager(native);
 			}
@@ -36,17 +35,17 @@ namespace RiftDotNet
 			{}
 
 			/// The enumeration of all sensor devices
-			property array<IDeviceHandle<ISensorDevice^>^>^ SensorDevices
+			property array<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ SensorDevices
 			{
-				virtual array<IDeviceHandle<ISensorDevice^>^>^ get()
+				virtual array<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ get()
 				{
 					auto enumerator = GetNative<OVR::DeviceManager>()->EnumerateDevices<OVR::SensorDevice>(false);
-					auto ret = gcnew List<IDeviceHandle<ISensorDevice^>^>();
+					auto ret = gcnew List<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>();
 
 					while(enumerator.Next())
 					{
 						auto clone = new OVR::DeviceHandle(enumerator);
-						ret->Add(gcnew TypedDeviceHandle<ISensorDevice^>(clone));
+						ret->Add(gcnew TypedDeviceHandle<ISensorDevice^,ISensorInfo^>(clone));
 					}
 
 					return ret->ToArray();
@@ -54,17 +53,17 @@ namespace RiftDotNet
 			}
 
 			/// The enumeration of all HMD devices.
-			property array<IDeviceHandle<IHMDDevice^>^>^ HMDDevices
+			property array<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ HMDDevices
 			{
-				virtual array<IDeviceHandle<IHMDDevice^>^>^ get()
+				virtual array<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ get()
 				{
 					auto enumerator = GetNative<OVR::DeviceManager>()->EnumerateDevices<OVR::HMDDevice>(false);
-					auto ret = gcnew List<IDeviceHandle<IHMDDevice^>^>();
+					auto ret = gcnew List<IDeviceHandle<IHMDDevice^,IHMDInfo^>^>();
 
 					while(enumerator.Next())
 					{
 						auto clone = new OVR::DeviceHandle(enumerator);
-						ret->Add(gcnew TypedDeviceHandle<IHMDDevice^>(clone));
+						ret->Add(gcnew TypedDeviceHandle<IHMDDevice^,IHMDInfo^>(clone));
 					}
 
 					return ret->ToArray();

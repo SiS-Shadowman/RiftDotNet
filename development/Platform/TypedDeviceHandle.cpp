@@ -9,8 +9,10 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
-		generic <typename T> where T : IDevice
-		Type^ TypedDeviceHandle<T>::GetType(RiftDotNet::DeviceType type)
+		generic <typename TDevice, typename TInfo>
+		where TDevice : IDevice
+		where TInfo : IDeviceInfo
+		Type^ TypedDeviceHandle<TDevice,TInfo>::GetType(RiftDotNet::DeviceType type)
 		{
 			switch(type)
 			{

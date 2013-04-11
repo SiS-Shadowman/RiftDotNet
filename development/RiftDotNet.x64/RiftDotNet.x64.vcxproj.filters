@@ -30,6 +30,9 @@
     <ClCompile Include="..\Platform\TypedDeviceHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Platform\DeviceHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Platform\DeviceBase.h">
@@ -84,6 +87,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Platform\Log4Net.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageBodyFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageDeviceStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\UnitTestDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageLatencyTestButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageLatencyTestColorDetected.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageLatencyTestSamples.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Platform\MessageLatencyTestStarted.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

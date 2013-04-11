@@ -18,8 +18,6 @@ namespace RiftDotNet
 
 			static SystemInitializer()
 			{
-				auto log = new Log4Net();
-				OVR::System::Init(log);
 			}
 
 		private:

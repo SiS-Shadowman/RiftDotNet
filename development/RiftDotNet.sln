@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiftDotNet.Test", "RiftDotNet.Test\RiftDotNet.Test.csproj", "{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RiftDotNet.Win32", "RiftDotNet.Win32\RiftDotNet.Win32.vcxproj", "{4AC4FAB6-4848-4649-8AC8-30F952E839D0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0679E04-AE88-4509-8FAF-14F4C773EF87} = {B0679E04-AE88-4509-8FAF-14F4C773EF87}
@@ -29,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiftDotNet", "RiftDotNet\Ri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{4EAA2211-108C-4021-AB6E-D7031C733DBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiftDotNet.Test", "RiftDotNet.Test\RiftDotNet.Test.csproj", "{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,18 +41,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Win32.ActiveCfg = Release|Any CPU
-		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|x64.ActiveCfg = Release|Any CPU
 		{4AC4FAB6-4848-4649-8AC8-30F952E839D0}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{4AC4FAB6-4848-4649-8AC8-30F952E839D0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{4AC4FAB6-4848-4649-8AC8-30F952E839D0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
@@ -143,6 +131,18 @@ Global
 		{4EAA2211-108C-4021-AB6E-D7031C733DBE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4EAA2211-108C-4021-AB6E-D7031C733DBE}.Release|Win32.ActiveCfg = Release|Any CPU
 		{4EAA2211-108C-4021-AB6E-D7031C733DBE}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

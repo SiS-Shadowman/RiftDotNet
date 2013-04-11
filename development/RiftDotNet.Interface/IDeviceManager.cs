@@ -12,12 +12,12 @@
 		/// The list of all sensor devices, one for each sensor, currently
 		/// attached to this system.
 		/// </summary>
-		IDeviceHandle<ISensorDevice>[] SensorDevices { get; }
+		IDeviceHandle<ISensorDevice, ISensorInfo>[] SensorDevices { get; }
 
 		/// <summary>
 		/// The list of all HMD devices, one for each HMD, currently
 		/// attached to this system.
 		/// </summary>
-		IDeviceHandle<IHMDDevice>[] HMDDevices { get; }
+		IDeviceHandle<IHMDDevice, IHMDInfo>[] HMDDevices { get; }
 	}
 }

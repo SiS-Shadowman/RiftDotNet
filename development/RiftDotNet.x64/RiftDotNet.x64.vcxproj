@@ -107,6 +107,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libovr64d.lib;User32.lib;Winmm.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Code\OculusSDK\LibOVR\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <RegisterOutput>false</RegisterOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,6 +126,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Code\OculusSDK\LibOVR\Src;D:\Code\OculusSDK\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -135,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="..\Platform\AssemblyInfo.cpp" />
     <ClCompile Include="..\Platform\DeviceBase.cpp" />
+    <ClCompile Include="..\Platform\DeviceHandle.cpp" />
     <ClCompile Include="..\Platform\RitDotNet.cpp" />
     <ClCompile Include="..\Platform\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -153,7 +156,14 @@
     <ClInclude Include="..\Platform\HMDDevice.h" />
     <ClInclude Include="..\Platform\HMDInfo.h" />
     <ClInclude Include="..\Platform\Log4Net.h" />
+    <ClInclude Include="..\Platform\Message.h" />
+    <ClInclude Include="..\Platform\MessageBodyFrame.h" />
+    <ClInclude Include="..\Platform\MessageDeviceStatus.h" />
     <ClInclude Include="..\Platform\MessageHandler.h" />
+    <ClInclude Include="..\Platform\MessageLatencyTestButton.h" />
+    <ClInclude Include="..\Platform\MessageLatencyTestColorDetected.h" />
+    <ClInclude Include="..\Platform\MessageLatencyTestSamples.h" />
+    <ClInclude Include="..\Platform\MessageLatencyTestStarted.h" />
     <ClInclude Include="..\Platform\RiftDotNet.h" />
     <ClInclude Include="..\Platform\SensorDevice.h" />
     <ClInclude Include="..\Platform\SensorFusion.h" />
@@ -161,6 +171,7 @@
     <ClInclude Include="..\Platform\stdafx.h" />
     <ClInclude Include="..\Platform\System.h" />
     <ClInclude Include="..\Platform\TypedDeviceHandle.h" />
+    <ClInclude Include="..\Platform\UnitTestDetector.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Platform\ReadMe.txt" />
