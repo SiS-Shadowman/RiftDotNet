@@ -51,11 +51,11 @@
     </ProjectReference>
     <ProjectReference Include="..\RiftDotNet.Win32\RiftDotNet.Win32.vcxproj">
       <Project>{4ac4fab6-4848-4649-8ac8-30f952e839d0}</Project>
-      <Name>RiftDotNet.Win32</Name>
+      <Name>RiftDotNet.Win32 %28Visual Studio 2010%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\RiftDotNet.x64\RiftDotNet.x64.vcxproj">
       <Project>{5bbd8b72-83f5-4f33-a6e4-868c67d0c436}</Project>
-      <Name>RiftDotNet.x64</Name>
+      <Name>RiftDotNet.x64 %28Visual Studio 2010%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -63,8 +63,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(OutDir)RiftDotNet.Interface.dll" "D:\Code\NewCode\shared\bin\"
+xcopy /Y "$(OutDir)RiftDotNet.Win32.dll" "D:\Code\NewCode\shared\bin\"
+xcopy /Y "$(OutDir)RiftDotNet.x64.dll" "D:\Code\NewCode\shared\bin\"
+xcopy /Y "$(OutDir)RiftDotNet.dll" "D:\Code\NewCode\shared\bin\"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

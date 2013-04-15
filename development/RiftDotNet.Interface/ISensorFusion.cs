@@ -70,5 +70,19 @@ namespace RiftDotNet
 		/// or less likely to cause motion sickness is unknown.
 		///</summary>
 		float YawMultiplier { get; set; }
+
+		/// <summary>
+		/// Whether or not orientation is to be predicted ahead of time, or not.
+		/// </summary>
+		bool IsPredictionEnabled { get; set; }
+
+		/// <summary>
+		/// The amount of time the orientation is predicted ahead, based
+		/// on acceleration and angular velocity.
+		/// </summary>
+		/// <remarks>
+		/// Should be a bit smaller than the average rendering latency.
+		/// </remarks>
+		TimeSpan PredictionTime { get; set; }
 	}
 }

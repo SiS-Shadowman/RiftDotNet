@@ -74,7 +74,7 @@
     </ProjectReference>
     <ProjectReference Include="..\RiftDotNet\RiftDotNet.csproj">
       <Project>{5e2e5b01-0b84-48e6-915e-f3d9ec5ad75d}</Project>
-      <Name>RiftDotNet</Name>
+      <Name>RiftDotNet %28RiftDotNet\RiftDotNet%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

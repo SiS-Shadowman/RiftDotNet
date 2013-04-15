@@ -22,6 +22,8 @@ namespace RiftDotNet
 			SensorFusion()
 			{
 				_native = new OVR::SensorFusion();
+
+				IsPredictionEnabled = false;
 			}
 
 			SensorFusion(ISensorDevice^ device)
@@ -139,6 +141,26 @@ namespace RiftDotNet
 				virtual void set(float f) { _native->SetYawMultiplier(f); }
 			}
 
+			property bool IsPredictionEnabled
+			{
+				virtual bool get()
+				{ 
+					// TODO: I want to be able to retrieve that value from OVR::SensorFusion
+					return _predictionEnabled;
+				}
+				virtual void set(bool b)
+				{
+					_predictionEnabled = b;
+					PredictionTime = PredictionTime;
+				}
+			}
+
+			property TimeSpan PredictionTime
+			{
+				virtual TimeSpan get() { return TimeSpan::FromMilliseconds(_native->GetPredictionDelta()); }
+				virtual void set(TimeSpan value) { _native->SetPrediction((float)value.TotalMilliseconds, _predictionEnabled); }
+			}
+
 		private:
 
 			static Vector3 FromNative(const OVR::Vector3f& other)
@@ -164,6 +186,7 @@ namespace RiftDotNet
 
 			OVR::SensorFusion* _native;
 			ISensorDevice^ _sensor;
+			bool _predictionEnabled;
 		};
 	}
 }
