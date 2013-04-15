@@ -68,7 +68,6 @@ namespace RiftDotNet
 			/// </summary>
 			property ISensorDevice^ AttachedDevice
 			{
-				virtual ISensorDevice^ get() { return _sensor; }
 				virtual void set(ISensorDevice^ value)
 				{
 					auto native = value != nullptr ? ((SensorDevice^)value)->Native : nullptr;
@@ -76,8 +75,6 @@ namespace RiftDotNet
 					{
 						throw gcnew System::InvalidOperationException("Attaching this sensor to the given device was not possible. Mabe the sensor already has a device attached to it?");
 					}
-
-					_sensor = value;
 				}
 			}
 
@@ -185,7 +182,6 @@ namespace RiftDotNet
 		private:
 
 			OVR::SensorFusion* _native;
-			ISensorDevice^ _sensor;
 			bool _predictionEnabled;
 		};
 	}

@@ -13,7 +13,6 @@ namespace RiftDotNet.Test
 			ISensorFusion fusion = Factory.CreateSensorFusion();
 			fusion.Should().NotBeNull();
 
-			fusion.AttachedDevice.Should().BeNull();
 			fusion.IsAttachedToSensor.Should().BeFalse();
 			fusion.AccelGain.Should().Be(0.05f);
 			fusion.Acceleration.Should().Be(Vector3.Zero);

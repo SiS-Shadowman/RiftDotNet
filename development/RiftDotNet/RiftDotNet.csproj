@@ -61,6 +61,11 @@
   <ItemGroup>
     <Content Include="OCULUS VR LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Link>README.md</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(OutDir)RiftDotNet.Interface.dll" "D:\Code\NewCode\shared\bin\"

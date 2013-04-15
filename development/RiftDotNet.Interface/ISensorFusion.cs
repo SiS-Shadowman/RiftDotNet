@@ -32,7 +32,7 @@ namespace RiftDotNet
 		/// notification messages. If a sensor is attached, manual message notification
 		/// is not necessary. Calling this function also resets SensorFusion state.
 		/// </summary>
-		ISensorDevice AttachedDevice { get; set; }
+		ISensorDevice AttachedDevice { set; }
 
 		///<summary>
 		/// Resets the current orientation and acceleration.
