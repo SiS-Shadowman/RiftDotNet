@@ -27,6 +27,9 @@ namespace RiftDotNet
 			{
 				virtual ISensorDevice^ get()
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IHMDDevice");
+
 					return Create<SensorDevice^>(GetNative<OVR::HMDDevice>()->GetSensor());
 				}
 			}

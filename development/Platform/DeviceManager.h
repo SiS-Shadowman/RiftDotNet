@@ -35,10 +35,13 @@ namespace RiftDotNet
 			{}
 
 			/// The enumeration of all sensor devices
-			property array<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ SensorDevices
+			property DisposableArray<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ SensorDevices
 			{
-				virtual array<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ get()
+				virtual DisposableArray<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>^ get()
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IDeviceHandle");
+
 					auto enumerator = GetNative<OVR::DeviceManager>()->EnumerateDevices<OVR::SensorDevice>(false);
 					auto ret = gcnew List<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>();
 
@@ -48,15 +51,18 @@ namespace RiftDotNet
 						ret->Add(gcnew TypedDeviceHandle<ISensorDevice^,ISensorInfo^>(clone));
 					}
 
-					return ret->ToArray();
+					return gcnew DisposableArray<IDeviceHandle<ISensorDevice^, ISensorInfo^>^>(ret->ToArray());
 				}
 			}
 
 			/// The enumeration of all HMD devices.
-			property array<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ HMDDevices
+			property DisposableArray<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ HMDDevices
 			{
-				virtual array<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ get()
+				virtual DisposableArray<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>^ get()
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IDeviceHandle");
+
 					auto enumerator = GetNative<OVR::DeviceManager>()->EnumerateDevices<OVR::HMDDevice>(false);
 					auto ret = gcnew List<IDeviceHandle<IHMDDevice^,IHMDInfo^>^>();
 
@@ -66,7 +72,7 @@ namespace RiftDotNet
 						ret->Add(gcnew TypedDeviceHandle<IHMDDevice^,IHMDInfo^>(clone));
 					}
 
-					return ret->ToArray();
+					return gcnew DisposableArray<IDeviceHandle<IHMDDevice^, IHMDInfo^>^>(ret->ToArray());
 				}
 			}
 

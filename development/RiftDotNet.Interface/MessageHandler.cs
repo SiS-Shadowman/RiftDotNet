@@ -7,6 +7,7 @@
 	public abstract class MessageHandler
 		: IMessageHandler
 	{
+		#region Internal
 		/// <summary>
 		///     This would be internal, but adding a friend-relationship
 		///     to a c++/cli assembly is a nightmare...
@@ -15,6 +16,8 @@
 		///     Please don't fuck with this.
 		/// </remarks>
 		public IMessageHandler Impl;
+
+		#endregion
 
 		#region IMessageHandler Members
 

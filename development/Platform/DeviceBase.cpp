@@ -38,6 +38,9 @@ namespace RiftDotNet
 
 		RiftDotNet::MessageHandler^ DeviceBase::MessageHandler::get()
 		{
+			if (IsDisposed)
+				throw gcnew ObjectDisposedException("IDevice");
+
 			auto native = dynamic_cast<Platform::MessageHandler*>(_native->GetMessageHandler());
 			if (native == nullptr)
 				return nullptr;
@@ -47,6 +50,9 @@ namespace RiftDotNet
 
 		void DeviceBase::MessageHandler::set(RiftDotNet::MessageHandler^ handler)
 		{
+			if (IsDisposed)
+				throw gcnew ObjectDisposedException("IDevice");
+
 			// The gist is as follows:
 			// The very same handler can be installed on multiple devices, however it's only
 			// necessary to create exactly *one* native OVR::MessageHandler per instance.

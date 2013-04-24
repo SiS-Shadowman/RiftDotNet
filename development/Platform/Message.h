@@ -35,6 +35,13 @@ namespace RiftDotNet
 			{
 				virtual IDevice^ get() sealed
 				{
+					if (_device == nullptr)
+						return nullptr;
+
+					// If we do not increase the ref-count here, then the device might be deleted
+					// elsewhere, even though a reference to it still exists and is being used.
+					// A somewhat undesirable scenario...
+					_device->AddRef();
 					return DeviceBase::Create(_device);
 				}
 			}

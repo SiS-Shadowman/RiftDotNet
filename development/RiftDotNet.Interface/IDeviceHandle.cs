@@ -39,6 +39,15 @@ namespace RiftDotNet
 		/// </summary>
 		/// <returns></returns>
 		IDevice CreateDevice();
+
+		/// <summary>
+		/// Whether or not this object has already been disposed of.
+		/// </summary>
+		/// <remarks>
+		/// When disposed, all properties and methods besides Dispose() and
+		/// IsDisposed will throw an ObjectDisposedException, when invoked.
+		/// </remarks>
+		bool IsDisposed { get; }
 	}
 
 	/// <summary>

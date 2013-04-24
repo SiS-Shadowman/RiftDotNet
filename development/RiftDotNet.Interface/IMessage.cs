@@ -1,4 +1,6 @@
-﻿namespace RiftDotNet
+﻿using System;
+
+namespace RiftDotNet
 {
 	/// <summary>
 	/// Interface for all messages.

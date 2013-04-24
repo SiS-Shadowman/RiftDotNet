@@ -26,6 +26,9 @@ namespace RiftDotNet
 
 			DeviceEnumerable(const OVR::DeviceEnumerator<>& native)
 			{
+				// We need to make a copy of the native enumerator, because we cannot
+				// *safely* store a c++ reference (it might get invalidated before this
+				// instance).
 				_native = new OVR::DeviceEnumerator<>(native);
 			}
 
@@ -37,7 +40,10 @@ namespace RiftDotNet
 
 			virtual IEnumerator<TypedDeviceHandle<TDevice,TInfo>^>^ GetEnumerator()
 			{
-				return gcnew Enumerator(new OVR::DeviceEnumerator<>(*_native));
+				if (_native == nullptr)
+					throw gcnew ObjectDisposedException("DeviceEnumerable");
+
+				return gcnew Enumerator(*_native);
 			}
 
 			virtual System::Collections::IEnumerator^ GetEnumerator2() = System::Collections::IEnumerable::GetEnumerator
@@ -52,9 +58,12 @@ namespace RiftDotNet
 			{
 			public:
 
-				Enumerator(OVR::DeviceEnumerator<>* native)
+				Enumerator(OVR::DeviceEnumerator<>& native)
 				{
-					_native = native;
+					// Same reason as with Enumerable, we cannot know which instance
+					// lives longer, and there is always this one user that doesn't
+					// use foreach, but calls GetEnumerator() himself.
+					_native = new OVR::DeviceEnumerator<>(native);
 				}
 
 				~Enumerator()
@@ -65,6 +74,9 @@ namespace RiftDotNet
 
 				property TypedDeviceHandle<TDevice,TInfo>^ Current { 
 					virtual TypedDeviceHandle<TDevice,TInfo>^ get() {
+						if (_native == nullptr)
+							throw gcnew ObjectDisposedException("DeviceEnumerator");
+
 						auto type = (DeviceType)_native->GetType();
 						if (type == DeviceType::None)
 						{
@@ -84,10 +96,16 @@ namespace RiftDotNet
 				};
 
 				virtual bool MoveNext() { 
+					if (_native == nullptr)
+						throw gcnew ObjectDisposedException("DeviceEnumerator");
+
 					return _native->Next();
 				}
 
 				virtual void Reset() { 
+					if (_native == nullptr)
+						throw gcnew ObjectDisposedException("DeviceEnumerator");
+
 					_native->Clear();
 				}
 

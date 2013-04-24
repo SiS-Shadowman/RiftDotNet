@@ -33,19 +33,45 @@ namespace RiftDotNet
 				_native = nullptr;
 			}
 
+			property bool IsDisposed
+			{
+				virtual bool get()
+				{
+					return _native == nullptr;
+				}
+			}
+
 			property bool IsCreated
 			{
-				virtual bool get() sealed { return _native->IsCreated(); }
+				virtual bool get() sealed
+				{
+					if (_native == nullptr)
+						throw gcnew ObjectDisposedException("IDeviceHandle");
+
+					return _native->IsCreated();
+				}
 			}
 
 			property bool IsAvailable
 			{
-				virtual bool get() sealed { return _native->IsAvailable(); }
+				virtual bool get() sealed
+				{
+					if (_native == nullptr)
+						throw gcnew ObjectDisposedException("IDeviceHandle");
+
+					return _native->IsAvailable();
+				}
 			}
 
 			property DeviceType DeviceType
 			{
-				virtual RiftDotNet::DeviceType get() sealed { return (RiftDotNet::DeviceType)_native->GetType(); }
+				virtual RiftDotNet::DeviceType get() sealed
+				{
+					if (_native == nullptr)
+						throw gcnew ObjectDisposedException("IDeviceHandle");
+
+					return (RiftDotNet::DeviceType)_native->GetType();
+				}
 			}
 
 			property IDeviceInfo^ DeviceInfo
@@ -55,6 +81,9 @@ namespace RiftDotNet
 
 			virtual IDevice^ CreateDevice() sealed
 			{
+				if (_native == nullptr)
+					throw gcnew ObjectDisposedException("IDeviceHandle");
+
 				return DeviceBase::Create(_native->CreateDevice());
 			}
 

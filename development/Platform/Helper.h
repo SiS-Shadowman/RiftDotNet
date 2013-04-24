@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <OVR_Device.h>
 
@@ -55,6 +55,9 @@ namespace RiftDotNet
 				}
 
 				// Why does the compiler not detect the exception?!
+				// As if the default label above will magically be jumped over
+				// when executing this code
+				// (╯°□°）╯︵ ┻━┻
 				return MessageType::None;
 			}
 

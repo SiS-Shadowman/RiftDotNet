@@ -27,21 +27,68 @@ namespace RiftDotNet
 					throw gcnew ArgumentNullException("native");
 
 				_native = native;
+
+				// We calculate the hash code here, because otherwise
+				// an object of this returns a different hash code after
+				// having been disposed of.
+#ifdef _WIN64
+				// TODO: Maybe use boost hashing?
+				auto value = reinterpret_cast<unsigned long long>(_native);
+				auto upper = (int)((value & 0xFFFFFFFF00000000) >> 32);
+				auto lower = (int)(value & 0x00000000FFFFFFFF);
+				auto hashed = upper ^ lower;
+#else
+				static_assert(sizeof(void*) == 4, "Unknown platform");
+				auto hashed = reinterpret_cast<int>(_native);
+#endif
+				_hashCode = hashed;
 			}
 
 			~DeviceBase();
 
 			property DeviceType Type
 			{
-				virtual DeviceType get() { return (DeviceType)_native->GetType(); }
+				virtual DeviceType get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IDevice");
+
+					return (DeviceType)_native->GetType();
+				}
 			}
 
 			property IDevice^ Parent
 			{
 				virtual IDevice^ get()
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IDevice");
+
 					auto native = _native->GetParent();
+					if (native == nullptr)
+						return nullptr;
+
+					native->AddRef();
 					return Create(native);
+				}
+			}
+
+			property bool IsDisposed
+			{
+				virtual bool get()
+				{
+					return _native == nullptr;
+				}
+			}
+
+			property UInt32 RefCount
+			{
+				virtual UInt32 get()
+				{
+					if (IsDisposed)
+						return 0;
+
+					return _native->GetRefCount();
 				}
 			}
 
@@ -69,17 +116,7 @@ namespace RiftDotNet
 
 			virtual int GetHashCode() override sealed
 			{
-#ifdef _WIN64
-				// TODO: Maybe use boost hashing?
-				auto value = reinterpret_cast<unsigned long long>(_native);
-				auto upper = (int)((value & 0xFFFFFFFF00000000) >> 32);
-				auto lower = (int)(value & 0x00000000FFFFFFFF);
-				auto hashed = upper ^ lower;
-				return hashed;
-#else
-				static_assert(sizeof(void*) == 4, "Unknown platform");
-				return reinterpret_cast<int>(_native);
-#endif
+				return _hashCode;
 			}
 
 			virtual bool Equals(IDevice^ other) sealed
@@ -111,6 +148,7 @@ namespace RiftDotNet
 
 		private:
 
+			int _hashCode;
 			OVR::DeviceBase* _native;
 			RiftDotNet::Platform::MessageHandler* _handler;
 		};

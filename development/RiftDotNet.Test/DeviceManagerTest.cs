@@ -10,13 +10,18 @@ namespace RiftDotNet.Test
 		[Test]
 		public void TestCtor()
 		{
-			using (IDeviceManager mgr = Factory.CreateDeviceManager())
+			IDeviceManager mgr;
+			using (mgr = Factory.CreateDeviceManager())
 			{
 				mgr.Should().NotBeNull();
+				mgr.RefCount.Should().Be(1);
+				mgr.IsDisposed.Should().BeFalse();
 				mgr.Type.Should().Be(DeviceType.Manager);
 				mgr.Parent.Should().BeNull();
 				mgr.MessageHandler.Should().BeNull();
 			}
+			mgr.RefCount.Should().Be(0);
+			mgr.IsDisposed.Should().BeTrue();
 		}
 
 		[Test]
@@ -24,9 +29,12 @@ namespace RiftDotNet.Test
 		{
 			// ReSharper disable PossibleMultipleEnumeration
 
-			using (IDeviceManager mgr = Factory.CreateDeviceManager())
+			IDeviceManager mgr;
+			using (mgr = Factory.CreateDeviceManager())
 			{
-				IDeviceHandle<IHMDDevice, IHMDInfo>[] devices = mgr.HMDDevices;
+				mgr.RefCount.Should().Be(1);
+				mgr.IsDisposed.Should().BeFalse();
+				var devices = mgr.HMDDevices;
 				devices.Should().NotBeNull();
 				foreach (var desc in devices)
 				{
@@ -38,15 +46,19 @@ namespace RiftDotNet.Test
 					hmd.Should().NotBeNull();
 				}
 			}
-
+			mgr.RefCount.Should().Be(0);
+			mgr.IsDisposed.Should().BeTrue();
 			// ReSharper restore PossibleMultipleEnumeration
 		}
 
 		[Test]
 		public void TestMessageHandler()
 		{
-			using (IDeviceManager mgr = Factory.CreateDeviceManager())
+			IDeviceManager mgr;
+			using (mgr = Factory.CreateDeviceManager())
 			{
+				mgr.RefCount.Should().Be(1);
+				mgr.IsDisposed.Should().BeFalse();
 				mgr.MessageHandler.Should().BeNull();
 				using (var handler = new DummyHandler())
 				{
@@ -96,6 +108,8 @@ namespace RiftDotNet.Test
 
 				// TOOD: Test throwing exceptions, filtering
 			}
+			mgr.RefCount.Should().Be(0);
+			mgr.IsDisposed.Should().BeTrue();
 		}
 
 		[Test]
@@ -103,9 +117,12 @@ namespace RiftDotNet.Test
 		{
 // ReSharper disable PossibleMultipleEnumeration
 
-			using (IDeviceManager mgr = Factory.CreateDeviceManager())
+			IDeviceManager mgr;
+			using (mgr = Factory.CreateDeviceManager())
 			{
-				IDeviceHandle<ISensorDevice, ISensorInfo>[] devices = mgr.SensorDevices;
+				mgr.RefCount.Should().Be(1);
+				mgr.IsDisposed.Should().BeFalse();
+				var devices = mgr.SensorDevices;
 				devices.Should().NotBeNull();
 				foreach (var desc in devices)
 				{
@@ -117,8 +134,42 @@ namespace RiftDotNet.Test
 					sensor.Should().NotBeNull();
 				}
 			}
+			mgr.RefCount.Should().Be(0);
+			mgr.IsDisposed.Should().BeTrue();
 
 // ReSharper restore PossibleMultipleEnumeration
+		}
+
+		[Test]
+		public void TestEquals()
+		{
+			IDeviceManager mgr;
+			int hashCode;
+			using (mgr = Factory.CreateDeviceManager())
+			{
+				mgr.Equals(mgr).Should().BeTrue();
+				mgr.GetHashCode().Should().Be(mgr.GetHashCode());
+				mgr.Equals(null).Should().BeFalse();
+				mgr.Equals(1).Should().BeFalse();
+				hashCode = mgr.GetHashCode();
+			}
+
+			mgr.GetHashCode().Should().Be(hashCode); //< The hashcode may not have changed after disposal
+			// TODO: Is it okay to base Equality on the internal pointer?
+		}
+
+		[Test]
+		public void TestContracts()
+		{
+			var mgr = Factory.CreateDeviceManager();
+			mgr.Dispose();
+			mgr.IsDisposed.Should().BeTrue();
+			mgr.Dispose(); //< Successive dispose is okay
+			new Action(() => { var unused = mgr.HMDDevices; }).ShouldThrow<ObjectDisposedException>();
+			new Action(() => { var unused = mgr.MessageHandler; }).ShouldThrow<ObjectDisposedException>();
+			new Action(() => { var unused = mgr.Parent; }).ShouldThrow<ObjectDisposedException>();
+			new Action(() => { var unused = mgr.SensorDevices; }).ShouldThrow<ObjectDisposedException>();
+			new Action(() => { var unused = mgr.Type; }).ShouldThrow<ObjectDisposedException>();
 		}
 	}
 

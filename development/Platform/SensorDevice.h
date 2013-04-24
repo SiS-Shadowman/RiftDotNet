@@ -26,11 +26,17 @@ namespace RiftDotNet
 			property CoordinateFrame CoordinateFrame
 			{
 				virtual RiftDotNet::CoordinateFrame get()
-				{ 
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					return (RiftDotNet::CoordinateFrame)_native->GetCoordinateFrame();
 				}
 				virtual void set(RiftDotNet::CoordinateFrame f)
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					_native->SetCoordinateFrame((OVR::SensorDevice::CoordinateFrame)f);
 				}
 			}
@@ -39,6 +45,9 @@ namespace RiftDotNet
 			{
 				virtual SensorRange get()
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					OVR::SensorRange tmp;
 					_native->GetRange(&tmp);
 					return Helper::FromNative(tmp);
@@ -46,6 +55,9 @@ namespace RiftDotNet
 
 				virtual void set(SensorRange range)
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					if (!_native->SetRange(Helper::ToNative(range)))
 					{
 						throw gcnew Exception("Unable to change the SensorRange: Maybe the parameters are out of range?");

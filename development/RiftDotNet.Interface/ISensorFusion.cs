@@ -18,6 +18,15 @@ namespace RiftDotNet
 		: IDisposable
 	{
 		/// <summary>
+		/// Whether or not this object has already been disposed of.
+		/// </summary>
+		/// <remarks>
+		/// When disposed, all properties and methods besides Dispose() and
+		/// IsDisposed will throw an ObjectDisposedException, when invoked.
+		/// </remarks>
+		bool IsDisposed { get; }
+
+		/// <summary>
 		/// Returns true if this Sensor fusion object is attached to a sensor.
 		/// </summary>
 		bool IsAttachedToSensor { get; }

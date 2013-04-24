@@ -32,7 +32,10 @@ namespace RiftDotNet
 
 			property IDeviceHandle^ DeviceHandle
 			{
-				virtual IDeviceHandle^ get() { return _handle; }
+				virtual IDeviceHandle^ get()
+				{
+					return _handle;
+				}
 			}
 
 		private:

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisposableArray.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="CoordinateFrame.cs" />
     <Compile Include="DeviceType.cs" />

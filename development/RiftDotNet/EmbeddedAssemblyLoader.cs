@@ -51,7 +51,7 @@ namespace RiftDotNet
 
 			// For fucks sake, microsoft is a huge dick.
 			// Where's the fucking difference between dumping the shitty byte array to
-			// a file versus loading it from memor?!?
+			// a file versus loading it from memory?!?
 			Assembly requestedAssembly = Assembly.Load(buffer);
 			return requestedAssembly;
 		}

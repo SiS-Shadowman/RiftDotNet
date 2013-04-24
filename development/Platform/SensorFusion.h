@@ -43,33 +43,51 @@ namespace RiftDotNet
 				delete _native;
 				_native = nullptr;
 			}
-		
-			/// <summary>
-			/// Returns true if this Sensor fusion object is attached to a sensor.
-			/// </summary>
+
+			property bool IsDisposed
+			{
+				virtual bool get()
+				{
+					return _native == nullptr;
+				}
+			}
+
 			property bool IsAttachedToSensor
 			{
-				virtual bool get() { return _native->IsAttachedToSensor(); }
+				virtual bool get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return _native->IsAttachedToSensor();
+				}
 			}
 
-			/// <summary>
-			/// ???
-			/// </summary>
 			property bool IsGravityEnabled
 			{
-				virtual bool get() { return _native->IsGravityEnabled(); }
-				virtual void set(bool b) { _native->SetGravityEnabled(b); }
+				virtual bool get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return _native->IsGravityEnabled();
+				}
+				virtual void set(bool b)
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					_native->SetGravityEnabled(b);
+				}
 			}
 
-			/// <summary>
-			/// Attaches this SensorFusion to a sensor device, from which it will receive
-			/// notification messages. If a sensor is attached, manual message notification
-			/// is not necessary. Calling this function also resets SensorFusion state.
-			/// </summary>
 			property ISensorDevice^ AttachedDevice
 			{
 				virtual void set(ISensorDevice^ value)
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					auto native = value != nullptr ? ((SensorDevice^)value)->Native : nullptr;
 					if (!_native->AttachToSensor(native))
 					{
@@ -78,75 +96,109 @@ namespace RiftDotNet
 				}
 			}
 
-			///<summary>
-			/// Resets the current orientation and acceleration.
-			///</summary>
 			virtual void Reset()
 			{
+				if (IsDisposed)
+					throw gcnew ObjectDisposedException("ISensorDevice");
+
 				_native->Reset();
 			}
 		
-			///<summary>
-			/// Obtain the current accumulated orientation. 
-			///</summary>
 			property Quaternion Orientation
 			{
-				virtual Quaternion get() { return FromNative(_native->GetOrientation()); }
+				virtual Quaternion get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return FromNative(_native->GetOrientation());
+				}
 			}
 		
-			///<summary>
-			/// ???
-			///</summary>
 			property Quaternion PredictedOrientation
 			{
-				virtual Quaternion get() { return FromNative(_native->GetPredictedOrientation()); }
+				virtual Quaternion get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return FromNative(_native->GetPredictedOrientation());
+				}
 			}
 		
-			///<summary>
-			/// Obtain the last absolute acceleration reading, in m/s^2.
-			///</summary>
 			property Vector3 Acceleration
 			{
-				virtual Vector3 get() { return FromNative(_native->GetAcceleration()); }
+				virtual Vector3 get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return FromNative(_native->GetAcceleration());
+				}
 			}
 		
-			///<summary>
-			/// Obtain the last angular velocity reading, in rad/s.
-			///</summary>
 			property Vector3 AngularVelocity
 			{
-				virtual Vector3 get() { return FromNative(_native->GetAngularVelocity()); }
+				virtual Vector3 get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return FromNative(_native->GetAngularVelocity());
+				}
 			}
 
-			///<summary>
-			/// Gain used to correct gyro with accel. Default value is appropriate for typical use.
-			///</summary>
 			property float AccelGain
 			{
-				virtual float get() { return _native ->GetAccelGain(); }
-				virtual void set(float f) { _native->SetAccelGain(f); }
+				virtual float get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return _native ->GetAccelGain();
+				}
+				virtual void set(float f)
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					_native->SetAccelGain(f);
+				}
 			}
 		
-			///<summary>
-			/// Multiplier for yaw rotation (turning); setting this higher than 1 (the default) can allow the game
-			/// to be played without auxillary rotation controls, possibly making it more immersive. Whether this is more
-			/// or less likely to cause motion sickness is unknown.
-			///</summary>
 			property float YawMultiplier
 			{
-				virtual float get() { return _native->GetYawMultiplier(); }
-				virtual void set(float f) { _native->SetYawMultiplier(f); }
+				virtual float get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return _native->GetYawMultiplier();
+				}
+				virtual void set(float f)
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					_native->SetYawMultiplier(f);
+				}
 			}
 
 			property bool IsPredictionEnabled
 			{
 				virtual bool get()
-				{ 
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					// TODO: I want to be able to retrieve that value from OVR::SensorFusion
 					return _predictionEnabled;
 				}
 				virtual void set(bool b)
 				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
 					_predictionEnabled = b;
 					PredictionTime = PredictionTime;
 				}
@@ -154,8 +206,21 @@ namespace RiftDotNet
 
 			property TimeSpan PredictionTime
 			{
-				virtual TimeSpan get() { return TimeSpan::FromMilliseconds(_native->GetPredictionDelta()); }
-				virtual void set(TimeSpan value) { _native->SetPrediction((float)value.TotalMilliseconds, _predictionEnabled); }
+				virtual TimeSpan get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					return TimeSpan::FromMilliseconds(_native->GetPredictionDelta());
+				}
+
+				virtual void set(TimeSpan value)
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("ISensorDevice");
+
+					_native->SetPrediction((float)value.TotalMilliseconds, _predictionEnabled);
+				}
 			}
 
 		private:
