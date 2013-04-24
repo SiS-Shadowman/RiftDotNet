@@ -1,25 +1,26 @@
 RiftDotNet
 ==========
 
-This project is a simple .NET wrapper around the Oculus Rift SDK. The structure is virtually identical to the one of the SDK, and thus the c++ samples
-can easily be substituted for .NET, for example C#, code.
+This project is a c# wrapper around the Oculus Rift SDK. It contains simple wrappers around most the native c++ classes which
+can be found in the SDK, and also a high level interface, which is actually the recommended way to go.
+
+Unfortunately, my developer kit has not been shipped yet, as of today (April 24. 2013), which means that big parts of the code have not
+been tested yet. It is possible that this code still contains some bugs. If you already have a developer kit or spot a bug 
+by browsing through this code, please report it.
 
 Using RiftDotNet
 ================
 
 In order to use this project, a reference to RiftDotNet and RiftDotNet.Interface is required. Those assemblies are built with
-any CPU and work both on x86 and x64 systems. The static Factory class can then be used to create a DeviceManager and a SensorFusion,
-almost identical to the original SDK. The interfaces in this wrapper have similar names as the c++ sdk (for example RiftDotNet.IHMDInfo <==> OVR::HMDInfo)
-and should be straight forward to use.
-
-External dependencies are SharpDX (for mathematical structures like quaternion or vectors) and Log4Net.
+any CPU and work both on x86 and x64 systems. External dependencies are SharpDX (for mathematical structures like quaternion or vectors) and Log4Net
+which can be found [here](http://sharpdx.org/download/) and [here](http://logging.apache.org/log4net/download_log4net.cgi).
 
 Example using HMDManager (Recommended)
 ======================================
 
 The following example shows how the SDK can be used:
 
-<code>
+```c
 using (var mgr = new HMDManager())
 {
 	// We need to ensure that the user has attached his rift to the computer
@@ -36,7 +37,7 @@ using (var mgr = new HMDManager())
 
 	hmd.Reset();
 }
-</code>
+```
 
 Example using the native wrapper (Not recommended)
 ==================================================
@@ -44,7 +45,7 @@ Example using the native wrapper (Not recommended)
 The following examples shows how the wrapper around the native SDK can be used:
 (In most cases, this should not be needed)
 
-<code>
+```c
 using (var manager = Factory.CreateDeviceManager())
 using (var fusion = Factory.CreateSensorFusion())
 {
@@ -78,7 +79,7 @@ using (var fusion = Factory.CreateSensorFusion())
 
 	device.Dispose();
 }
-</code>
+```
 
 IDisposable caveats
 ===================
