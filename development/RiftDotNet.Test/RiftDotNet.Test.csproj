@@ -59,6 +59,7 @@
     <Compile Include="FactoryTest.cs" />
     <Compile Include="FusionSensorTest.cs" />
     <Compile Include="HMDInfoTest.cs" />
+    <Compile Include="HMDManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorInfoTest.cs" />
     <Compile Include="SensorRangeTest.cs" />

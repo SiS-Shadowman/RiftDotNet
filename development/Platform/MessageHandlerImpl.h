@@ -29,26 +29,42 @@ namespace RiftDotNet
 			~MessageHandlerImpl();
 
 			property bool IsInstalled { virtual bool get(); }
+			property bool IsDisposed { virtual bool get() {return _native == nullptr; } }
 
 			virtual void RemoveHandlerFromDevices();
 
 			virtual void OnMessage(RiftDotNet::IMessage^ message)
 			{
+				if (IsDisposed)
+					throw gcnew ObjectDisposedException("IMessageHandler");
+
 				_managed->OnMessage(message);
 			}
 
 			virtual bool SupportsMessageType(RiftDotNet::MessageType type)
 			{
+				if (IsDisposed)
+					throw gcnew ObjectDisposedException("IMessageHandler");
+
 				return _managed->SupportsMessageType(type);
 			}
 
 			property RiftDotNet::MessageHandler^ Managed
 			{
-				RiftDotNet::MessageHandler^ get() { return _managed; }
+				RiftDotNet::MessageHandler^ get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IMessageHandler");
+
+					return _managed;
+				}
 			}
 
 			Platform::MessageHandler* GetNative()
 			{
+				if (IsDisposed)
+					throw gcnew ObjectDisposedException("IMessageHandler");
+
 				return _native;
 			}
 

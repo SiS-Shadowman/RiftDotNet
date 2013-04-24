@@ -1,4 +1,6 @@
-﻿namespace RiftDotNet
+﻿using System;
+
+namespace RiftDotNet
 {
 	/// <summary>
 	///     This class must be inherited from in order to install custom
@@ -17,20 +19,29 @@
 		/// </remarks>
 		public IMessageHandler Impl;
 
+		private bool _isDisposed;
+
 		#endregion
 
 		#region IMessageHandler Members
 
 		public virtual void Dispose()
 		{
+			if (_isDisposed)
+				return;
+
 			RemoveHandlerFromDevices();
 			Impl = null;
+			_isDisposed = true;
 		}
 
 		public bool IsInstalled
 		{
 			get
 			{
+				if (IsDisposed)
+					throw new ObjectDisposedException("IMessageHandler");
+
 				if (Impl != null)
 					return Impl.IsInstalled;
 
@@ -38,8 +49,16 @@
 			}
 		}
 
+		public bool IsDisposed
+		{
+			get { return _isDisposed; }
+		}
+
 		public void RemoveHandlerFromDevices()
 		{
+			if (IsDisposed)
+				throw new ObjectDisposedException("IMessageHandler");
+
 			if (Impl != null)
 			{
 				Impl.Dispose();

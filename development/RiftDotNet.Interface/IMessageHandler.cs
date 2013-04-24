@@ -11,6 +11,8 @@ namespace RiftDotNet
 		/// </summary>
 		bool IsInstalled { get; }
 
+		bool IsDisposed { get; }
+
 		void RemoveHandlerFromDevices();
 
 		void OnMessage(IMessage message);

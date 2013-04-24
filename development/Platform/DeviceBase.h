@@ -27,21 +27,7 @@ namespace RiftDotNet
 					throw gcnew ArgumentNullException("native");
 
 				_native = native;
-
-				// We calculate the hash code here, because otherwise
-				// an object of this returns a different hash code after
-				// having been disposed of.
-#ifdef _WIN64
-				// TODO: Maybe use boost hashing?
-				auto value = reinterpret_cast<unsigned long long>(_native);
-				auto upper = (int)((value & 0xFFFFFFFF00000000) >> 32);
-				auto lower = (int)(value & 0x00000000FFFFFFFF);
-				auto hashed = upper ^ lower;
-#else
-				static_assert(sizeof(void*) == 4, "Unknown platform");
-				auto hashed = reinterpret_cast<int>(_native);
-#endif
-				_hashCode = hashed;
+				_equalityHandle = IntPtr(native);
 			}
 
 			~DeviceBase();
@@ -111,12 +97,12 @@ namespace RiftDotNet
 				// For now, I will assume that the ver same OVR::DeviceBase pointer
 				// is used for the same device. But maybe we need to compare the device
 				// id or something similar...
-				return _native == tmp->_native;
+				return _equalityHandle == tmp->_equalityHandle;
 			}
 
 			virtual int GetHashCode() override sealed
 			{
-				return _hashCode;
+				return _equalityHandle.GetHashCode();
 			}
 
 			virtual bool Equals(IDevice^ other) sealed
@@ -149,6 +135,7 @@ namespace RiftDotNet
 		private:
 
 			int _hashCode;
+			IntPtr _equalityHandle;
 			OVR::DeviceBase* _native;
 			RiftDotNet::Platform::MessageHandler* _handler;
 		};

@@ -41,6 +41,9 @@ namespace RiftDotNet
 
 		bool MessageHandlerImpl::IsInstalled::get()
 		{
+			if (IsDisposed)
+				throw gcnew ObjectDisposedException("IMessageHandler");
+
 			return _native->IsHandlerInstalled();
 		}
 
