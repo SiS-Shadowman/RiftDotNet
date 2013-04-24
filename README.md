@@ -36,6 +36,7 @@ using (var mgr = new HMDManager())
 	Console.WriteLine("Manufacturer: {0}", hmd.Info.Manufacturer);
 
 	hmd.Reset();
+	var orientation = hmd.Orientation;
 }
 ```
 
