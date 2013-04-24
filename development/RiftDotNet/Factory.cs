@@ -12,11 +12,6 @@ namespace RiftDotNet
 	public static class Factory
 	{
 		/// <summary>
-		///    Hack to load the c++/cli assembly from its embedded resource in this assembly.
-		/// </summary>
-		private static readonly EmbeddedAssemblyLoader AssemblyLoader;
-
-		/// <summary>
 		///     The actual factory corresponding to the platform this code is currently
 		///     executed on. The actual implementation is written in c++\cli.
 		/// </summary>
@@ -32,26 +27,14 @@ namespace RiftDotNet
 
 		static Factory()
 		{
-			// So that we can load the assembly from the embedded resource
-			AssemblyLoader = new EmbeddedAssemblyLoader();
-
 			// Due the way the JIT-compiler works, the methods are not compiled unless executed.
 			// This also means that the referenced assemblies are not loaded before, hence this works.
 			// However it will fail horribly if microsoft decides to change the rules for its jit
 			// compiler.
-			switch (Marshal.SizeOf(IntPtr.Zero))
-			{
-				case 8:
-					Loadx64();
-					break;
-
-				case 4:
-					LoadWin32();
-					break;
-
-				default:
-					throw new NotImplementedException("Unknown Platform");
-			}
+			if (Environment.Is64BitProcess)
+				Loadx64();
+			else
+				LoadWin32();
 		}
 
 		private static void Loadx64()

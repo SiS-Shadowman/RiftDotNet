@@ -45,6 +45,7 @@ namespace RiftDotNet
 
 		///<summary>
 		/// Resets the current orientation and acceleration.
+		/// TODO: What about predicted orientation and angular velocity?!
 		///</summary>
 		void Reset();
 

@@ -86,9 +86,6 @@
     <ClInclude Include="..\Platform\RiftDotNet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Platform\System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Platform\Factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>

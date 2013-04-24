@@ -165,7 +165,7 @@ namespace RiftDotNet
 					_native->SetAccelGain(f);
 				}
 			}
-		
+
 			property float YawMultiplier
 			{
 				virtual float get()

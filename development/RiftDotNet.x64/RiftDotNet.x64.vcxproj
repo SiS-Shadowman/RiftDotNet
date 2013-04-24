@@ -117,7 +117,6 @@
     <ClInclude Include="..\Platform\SensorFusion.h" />
     <ClInclude Include="..\Platform\SensorInfo.h" />
     <ClInclude Include="..\Platform\stdafx.h" />
-    <ClInclude Include="..\Platform\System.h" />
     <ClInclude Include="..\Platform\TypedDeviceHandle.h" />
     <ClInclude Include="..\Platform\UnitTestDetector.h" />
   </ItemGroup>

@@ -48,7 +48,6 @@
     <Compile Include="Factory.cs" />
     <Compile Include="IHMD.cs" />
     <Compile Include="HMDManager.cs" />
-    <Compile Include="InternalMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
