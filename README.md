@@ -94,6 +94,7 @@ longer needed, e.g. referenced by the calling code.
 For example, the IDevice interface contains a Parent property. Every access to this property must be accompanied by a call to dispose, otherwise
 native resources are leaked (until the GC decides to finalize the wrapper classes):
 
+```c
 void DoSomething(IDevice device)
 {
 	using (var parent = device.Parent)
@@ -104,6 +105,7 @@ void DoSomething(IDevice device)
 		}
 	}
 }
+```
 
 This behaviour is consistent with the implementation of SharpDX.
 
