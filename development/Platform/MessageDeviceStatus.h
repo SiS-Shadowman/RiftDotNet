@@ -22,12 +22,17 @@ namespace RiftDotNet
 			{
 				auto tmp = const_cast<OVR::MessageDeviceStatus&>(message);
 
-				// It would be possible to avoid creating a DeviceHandle,
-				// however there's no point because then another allocation
-				// for OVR::DeviceHandle would be required.
-				// The overhead of (possibly needlessly) creating a device handle
-				// seems like the better alternative.
-				_handle = gcnew Platform::DeviceHandle(&tmp.Handle);
+				auto wrapper = new DeviceHandleWrapper(tmp.Handle);
+				_handle = gcnew Platform::DeviceHandle(wrapper);
+			}
+
+			~MessageDeviceStatus()
+			{
+				if (_handle != nullptr)
+				{
+					delete _handle;
+					_handle = nullptr;
+				}
 			}
 
 			property IDeviceHandle^ DeviceHandle

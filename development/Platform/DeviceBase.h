@@ -19,17 +19,12 @@ namespace RiftDotNet
 		public ref class DeviceBase abstract
 			: public IDevice
 		{
+			static log4net::ILog^ Log = log4net::LogManager::GetLogger(System::Reflection::MethodBase::GetCurrentMethod()->DeclaringType);
+
 		public:
 
-			DeviceBase(OVR::DeviceBase* native)
-			{
-				if (native == nullptr)
-					throw gcnew ArgumentNullException("native");
-
-				_native = native;
-				_equalityHandle = IntPtr(native);
-			}
-
+			DeviceBase(OVR::DeviceBase* native);
+			!DeviceBase();
 			~DeviceBase();
 
 			property DeviceType Type
@@ -84,6 +79,11 @@ namespace RiftDotNet
 				virtual void set(RiftDotNet::MessageHandler^ handler);
 			}
 
+			property RiftDotNet::IDeviceInfo^ Info
+			{
+				virtual RiftDotNet::IDeviceInfo^ get() abstract;
+			}
+
 
 			virtual bool Equals(Object^ other) override sealed
 			{
@@ -134,7 +134,6 @@ namespace RiftDotNet
 
 		private:
 
-			int _hashCode;
 			IntPtr _equalityHandle;
 			OVR::DeviceBase* _native;
 			RiftDotNet::Platform::MessageHandler* _handler;

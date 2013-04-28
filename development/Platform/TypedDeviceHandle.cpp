@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "TypedDeviceHandle.h"
 
-#include "DeviceManager.h"
-#include "HMDDevice.h"
-#include "SensorDevice.h"
-
 namespace RiftDotNet
 {
 	namespace Platform
@@ -20,13 +16,13 @@ namespace RiftDotNet
 				return void::typeid;
 
 			case RiftDotNet::DeviceType::Manager:
-				return DeviceManager::typeid;
+				return IDeviceManager::typeid;
 
 			case RiftDotNet::DeviceType::HMD:
-				return HMDDevice::typeid;
+				return IHMDDevice::typeid;
 
 			case RiftDotNet::DeviceType::Sensor:
-				return SensorDevice::typeid;
+				return ISensorDevice::typeid;
 
 			default:
 				throw gcnew ArgumentException();

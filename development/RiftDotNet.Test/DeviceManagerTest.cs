@@ -38,12 +38,18 @@ namespace RiftDotNet.Test
 				devices.Should().NotBeNull();
 				foreach (var desc in devices)
 				{
+					desc.DeviceType.Should().NotBe(DeviceType.None);
 					desc.Should().NotBeNull();
 					desc.IsAvailable.Should().BeTrue();
 					desc.IsCreated.Should().BeFalse();
 
-					IHMDDevice hmd = desc.CreateDevice();
-					hmd.Should().NotBeNull();
+					using (IHMDDevice hmd = desc.CreateDevice())
+					{
+						hmd.Type.Should().BeSameAs(desc.DeviceType);
+						hmd.Should().NotBeNull();
+					}
+
+					desc.IsCreated.Should().BeTrue();
 				}
 			}
 			mgr.RefCount.Should().Be(0);
@@ -126,12 +132,18 @@ namespace RiftDotNet.Test
 				devices.Should().NotBeNull();
 				foreach (var desc in devices)
 				{
+					desc.DeviceType.Should().NotBe(DeviceType.None);
 					desc.Should().NotBeNull();
 					desc.IsAvailable.Should().BeTrue();
 					desc.IsCreated.Should().BeFalse();
 
-					ISensorDevice sensor = desc.CreateDevice();
-					sensor.Should().NotBeNull();
+					using (ISensorDevice sensor = desc.CreateDevice())
+					{
+						sensor.Type.Should().BeSameAs(desc.DeviceType);
+						sensor.Should().NotBeNull();
+					}
+
+					desc.IsCreated.Should().BeTrue();
 				}
 			}
 			mgr.RefCount.Should().Be(0);

@@ -56,6 +56,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeviceManagerTest.cs" />
+    <Compile Include="Dummy\DeviceHandle.cs" />
+    <Compile Include="Dummy\DeviceInfo.cs" />
+    <Compile Include="Dummy\DeviceManager.cs" />
+    <Compile Include="Dummy\Factory.cs" />
+    <Compile Include="Dummy\HMDDevice.cs" />
+    <Compile Include="Dummy\HMDInfo.cs" />
+    <Compile Include="Dummy\Message.cs" />
+    <Compile Include="Dummy\MessageDeviceStatus.cs" />
+    <Compile Include="Dummy\SensorDevice.cs" />
+    <Compile Include="Dummy\SensorFusion.cs" />
+    <Compile Include="Dummy\SensorInfo.cs" />
     <Compile Include="FactoryTest.cs" />
     <Compile Include="FusionSensorTest.cs" />
     <Compile Include="HMDInfoTest.cs" />

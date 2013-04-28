@@ -5,6 +5,7 @@
 #include "RiftDotNet.h"
 
 using namespace System;
+using namespace System::ComponentModel;
 
 
 
@@ -16,6 +17,37 @@ namespace RiftDotNet
 		ref class Helper
 		{
 		public:
+
+			static RiftDotNet::CoordinateFrame FromNative(OVR::SensorDevice::CoordinateFrame frame)
+			{
+				switch(frame)
+				{
+				case OVR::SensorDevice::Coord_Sensor:
+					return RiftDotNet::CoordinateFrame::Sensor;
+
+				case OVR::SensorDevice::Coord_HMD:
+					return RiftDotNet::CoordinateFrame::HMD;
+
+				default:
+					throw gcnew InvalidEnumArgumentException("frame", (int)frame, OVR::SensorDevice::CoordinateFrame::typeid);
+				}
+			}
+
+			static OVR::SensorDevice::CoordinateFrame ToNative(RiftDotNet::CoordinateFrame frame)
+			{
+				
+				switch(frame)
+				{
+				case OVR::SensorDevice::Coord_Sensor:
+					return OVR::SensorDevice::Coord_Sensor;
+
+				case OVR::SensorDevice::Coord_HMD:
+					return OVR::SensorDevice::Coord_HMD;
+
+				default:
+					throw gcnew InvalidEnumArgumentException("frame", (int)frame, OVR::SensorDevice::CoordinateFrame::typeid);
+				}
+			}
 
 			static SharpDX::Color FromNative(OVR::Color color)
 			{

@@ -17,11 +17,16 @@ namespace RiftDotNet
 		public ref class SensorFusion
 			: public ISensorFusion
 		{
+			static log4net::ILog^ Log = log4net::LogManager::GetLogger(System::Reflection::MethodBase::GetCurrentMethod()->DeclaringType);
+
 		public:
 
 			SensorFusion()
 			{
 				_native = new OVR::SensorFusion();
+
+				Log->DebugFormat("Wrapping SensorFusion '{0:x}' without sensor attached",
+					reinterpret_cast<std::size_t>(_native));
 
 				IsPredictionEnabled = false;
 			}
@@ -30,11 +35,17 @@ namespace RiftDotNet
 			{
 				if (device != nullptr)
 				{
-					_native = new OVR::SensorFusion(((SensorDevice^)device)->Native);
+					auto nativeSensor = ((SensorDevice^)device)->Native;
+					_native = new OVR::SensorFusion(nativeSensor);
+					Log->DebugFormat("Wrapping SensorFusion '{0:x}' with sensor '{1:x}' attached",
+					reinterpret_cast<std::size_t>(_native),
+					reinterpret_cast<std::size_t>(nativeSensor));
 				}
 				else
 				{
 					_native = new OVR::SensorFusion();
+					Log->DebugFormat("Wrapping SensorFusion '{0:x}' without sensor attached",
+						reinterpret_cast<std::size_t>(_native));
 				}
 			}
 

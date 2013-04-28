@@ -36,6 +36,11 @@ namespace RiftDotNet
 		MessageHandler MessageHandler { get; set; }
 
 		/// <summary>
+		/// Information about this device.
+		/// </summary>
+		IDeviceInfo Info { get; }
+
+		/// <summary>
 		/// Whether or not this object has already been disposed of.
 		/// </summary>
 		/// <remarks>

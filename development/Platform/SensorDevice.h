@@ -5,6 +5,7 @@
 #include "RiftDotNet.h"
 #include "DeviceBase.h"
 #include "Helper.h"
+#include "SensorInfo.h"
 
 
 
@@ -30,14 +31,34 @@ namespace RiftDotNet
 					if (IsDisposed)
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
-					return (RiftDotNet::CoordinateFrame)_native->GetCoordinateFrame();
+					auto tmp = _native->GetCoordinateFrame();
+					return Helper::FromNative(tmp);
 				}
 				virtual void set(RiftDotNet::CoordinateFrame f)
 				{
 					if (IsDisposed)
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
-					_native->SetCoordinateFrame((OVR::SensorDevice::CoordinateFrame)f);
+					auto tmp = Helper::ToNative(f);
+					_native->SetCoordinateFrame(tmp);
+				}
+			}
+
+			property RiftDotNet::IDeviceInfo^ Info
+			{
+				virtual RiftDotNet::IDeviceInfo^ get() override { return Info1; }
+			}
+
+			property RiftDotNet::ISensorInfo^ Info1
+			{
+				virtual RiftDotNet::ISensorInfo^ get() = RiftDotNet::ISensorDevice::Info::get
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IHMDDevice");
+
+					OVR::SensorInfo info;
+					GetNative<OVR::SensorDevice>()->GetDeviceInfo(&info);
+					return gcnew RiftDotNet::Platform::SensorInfo(info);
 				}
 			}
 

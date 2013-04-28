@@ -21,14 +21,22 @@ namespace RiftDotNet
 		{
 		public:
 
-			TypedDeviceHandle(OVR::DeviceHandle* native)
-				: DeviceHandle(native)
+			TypedDeviceHandle(HandleWrapper* wrapper)
+				: DeviceHandle(wrapper)
 				, _type(TDevice::typeid)
 			{
-				Type^ type = GetType((RiftDotNet::DeviceType)native->GetType());
+				if (wrapper == nullptr)
+					throw gcnew ArgumentNullException("wrapper");
+
+				Type^ type = GetType((RiftDotNet::DeviceType)wrapper->Handle().GetType());
 				if (_type != type)
 				{
-					throw gcnew ArgumentException();
+					throw gcnew ArgumentException(
+						String::Format("Expected type to be '{0}' but handle reported '{1}' ({2})",
+						_type->Name,
+						type->Name,
+						((RiftDotNet::DeviceType)wrapper->Handle().GetType()).ToString()
+						));
 				}
 			}
 
@@ -36,7 +44,7 @@ namespace RiftDotNet
 
 			virtual TDevice CreateDevice() new
 			{
-				return DeviceBase::Create<TDevice>(Native->CreateDevice());
+				return DeviceBase::Create<TDevice>(Native.CreateDevice());
 			}
 
 			property TInfo DeviceInfo
@@ -49,7 +57,7 @@ namespace RiftDotNet
 
 		private:
 
-			const Type^ _type;
+			Type^ _type;
 		};
 	}
 }

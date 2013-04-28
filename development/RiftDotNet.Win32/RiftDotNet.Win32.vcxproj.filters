@@ -119,6 +119,9 @@
     <ClInclude Include="..\Platform\MessageHandlerImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Platform\ValueWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Platform\ReadMe.txt" />

@@ -12,7 +12,10 @@ namespace RiftDotNet
 	{
 		IDeviceInfo^ DeviceHandle::DeviceInfo::get()
 		{
-			switch(_native->GetType())
+			if (IsDisposed)
+				throw gcnew ObjectDisposedException("IDeviceHandle");
+
+			switch(_native->Handle().GetType())
 			{
 			case OVR::Device_HMD:
 				{
@@ -37,7 +40,10 @@ namespace RiftDotNet
 
 		void DeviceHandle::GetDeviceInfo(OVR::DeviceInfo& info)
 		{
-			if (!_native->GetDeviceInfo(&info))
+			if (IsDisposed)
+				throw gcnew ObjectDisposedException("IDeviceHandle");
+
+			if (!_native->Handle().GetDeviceInfo(&info))
 			{
 				throw gcnew Exception("Unable to retrieve information about this device - Check the log for further information");
 			}

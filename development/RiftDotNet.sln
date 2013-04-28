@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiftDotNet.Test", "RiftDotNet.Test\RiftDotNet.Test.csproj", "{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RiftDotNet.NativeTest", "RiftDotNet.NativeTest\RiftDotNet.NativeTest.vcxproj", "{CA917F26-A7DB-4CD0-954E-60D913B94C59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,18 @@ Global
 		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|Win32.ActiveCfg = Release|Any CPU
 		{1D49FA85-A793-4CAE-8897-3DE53D48C1BC}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|Win32.Build.0 = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Debug|x64.ActiveCfg = Debug|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|Any CPU.ActiveCfg = Release|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|Win32.ActiveCfg = Release|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|Win32.Build.0 = Release|Win32
+		{CA917F26-A7DB-4CD0-954E-60D913B94C59}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

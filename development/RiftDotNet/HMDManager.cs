@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using SharpDX;
 
 namespace RiftDotNet
 {
@@ -25,6 +24,7 @@ namespace RiftDotNet
 	public sealed class HMDManager
 		: IDisposable
 	{
+		private readonly IFactory _factory;
 		private readonly Dictionary<DeviceKey, HMD> _devices;
 		private readonly MessageHandler _handler;
 		private readonly ReaderWriterLockSlim _lock;
@@ -47,10 +47,19 @@ namespace RiftDotNet
 		/// </remarks>
 		public event Action<IHMD> DeviceDetached;
 
-		public HMDManager()
+		internal IDeviceManager Manager { get { return _manager; } }
+
+		internal HMDManager(IFactory factory, IDeviceManager manager)
 		{
+			if (factory == null)
+				throw new ArgumentNullException();
+
+			if (manager == null)
+				throw new ArgumentNullException();
+
+			_factory = factory;
 			_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-			_manager = Factory.CreateDeviceManager();
+			_manager = manager;
 			_handler = new InternalMessageHandler(this);
 			_manager.MessageHandler = _handler;
 			_nativeResources = new Dictionary<DeviceKey, DeviceResources>();
@@ -66,6 +75,14 @@ namespace RiftDotNet
 				}
 			}
 		}
+
+		internal HMDManager(IFactory factory)
+			: this(factory, factory.CreateDeviceManager())
+		{}
+
+		public HMDManager()
+			: this(Factory.PlatformFactory)
+		{}
 
 		/// <summary>
 		///     A reference to an HMD which is currently attached to this computer.
@@ -143,7 +160,7 @@ namespace RiftDotNet
 
 					try
 					{
-						handle.Reset();
+						handle.Set();
 					}
 					catch (ObjectDisposedException)
 					{
@@ -194,6 +211,9 @@ namespace RiftDotNet
 				_devices.Clear();
 
 				_manager.Dispose();
+
+				DeviceAttached = null;
+				DeviceDetached = null;
 			}
 			finally
 			{
@@ -203,7 +223,7 @@ namespace RiftDotNet
 
 		#endregion
 
-		private void DeviceChanged(IMessageDeviceStatus message)
+		internal void DeviceChanged(IMessageDeviceStatus message)
 		{
 			if (message == null)
 				return;
@@ -222,9 +242,9 @@ namespace RiftDotNet
 			{
 				using (IDeviceHandle handle = message.DeviceHandle)
 				{
-					if (handle.DeviceType == DeviceType.HMD)
+					if (handle.DeviceType == DeviceType.Sensor)
 					{
-						RemoveDevice((IDeviceHandle<IHMDDevice, IHMDInfo>) handle);
+						RemoveDevice((IDeviceHandle<ISensorDevice, ISensorInfo>) handle);
 					}
 				}
 			}
@@ -235,15 +255,8 @@ namespace RiftDotNet
 			_lock.EnterWriteLock();
 			try
 			{
-				var key = new DeviceKey(handle.DeviceInfo);
-				DeviceResources resources;
-				if (_nativeResources.TryGetValue(key, out resources))
-				{
-					// So this case should not really take place, but...
-					RemoveDevice(resources);
-				}
-
-				resources = new DeviceResources(handle);
+				var resources = new DeviceResources(_factory, handle);
+				var key = resources.Key;
 				_nativeResources.Add(key, resources);
 				HMD hmd;
 
@@ -276,7 +289,7 @@ namespace RiftDotNet
 				// We need to find the corresponding HMD entry and remove
 				// those resources from it.
 				HMD hmd;
-				var key = new DeviceKey(resources.Info);
+				var key = resources.Key;
 				if (_devices.TryGetValue(key, out hmd))
 				{
 					hmd.Resources = null;
@@ -297,7 +310,7 @@ namespace RiftDotNet
 			}
 		}
 
-		private void RemoveDevice(IDeviceHandle<IHMDDevice, IHMDInfo> handle)
+		private void RemoveDevice(IDeviceHandle<ISensorDevice, ISensorInfo> handle)
 		{
 			_lock.EnterWriteLock();
 			try
@@ -315,477 +328,5 @@ namespace RiftDotNet
 			}
 		}
 
-		#region Nested type: DeviceKey
-
-		private struct DeviceKey : IEquatable<DeviceKey>
-		{
-			public readonly DeviceType DeviceType;
-			public readonly string Manufacturer;
-			public readonly string ProductName;
-			public readonly uint Version;
-
-			public DeviceKey(IDeviceInfo deviceInfo)
-			{
-				DeviceType = deviceInfo.Type;
-				ProductName = deviceInfo.ProductName;
-				Manufacturer = deviceInfo.Manufacturer;
-				Version = deviceInfo.Version;
-			}
-
-			#region IEquatable<DeviceKey> Members
-
-			public bool Equals(DeviceKey other)
-			{
-				return DeviceType == other.DeviceType && string.Equals(ProductName, other.ProductName) &&
-				       string.Equals(Manufacturer, other.Manufacturer) && Version == other.Version;
-			}
-
-			#endregion
-
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) return false;
-				return obj is DeviceKey && Equals((DeviceKey) obj);
-			}
-
-			public override int GetHashCode()
-			{
-				unchecked
-				{
-					var hashCode = (int) DeviceType;
-					hashCode = (hashCode*397) ^ (ProductName != null ? ProductName.GetHashCode() : 0);
-					hashCode = (hashCode*397) ^ (Manufacturer != null ? Manufacturer.GetHashCode() : 0);
-					hashCode = (hashCode*397) ^ (int) Version;
-					return hashCode;
-				}
-			}
-
-			public static bool operator ==(DeviceKey left, DeviceKey right)
-			{
-				return left.Equals(right);
-			}
-
-			public static bool operator !=(DeviceKey left, DeviceKey right)
-			{
-				return !left.Equals(right);
-			}
-		}
-
-		#endregion
-
-		#region Nested type: DeviceResources
-
-		private sealed class DeviceResources
-			: IDisposable
-		{
-			internal readonly IHMDDevice Device;
-			internal readonly ISensorFusion Fusion;
-			internal readonly IHMDInfo Info;
-			internal readonly ISensorDevice Sensor;
-
-			public DeviceResources(IDeviceHandle<IHMDDevice, IHMDInfo> handle)
-			{
-				Info = handle.DeviceInfo;
-				Device = handle.CreateDevice();
-				Sensor = Device.Sensor;
-				Fusion = Factory.CreateSensorFusion(Sensor);
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				Fusion.Dispose();
-				Sensor.Dispose();
-				Device.Dispose();
-			}
-
-			#endregion
-		}
-
-		#endregion
-
-		#region Nested type: HMD
-
-		private sealed class HMD
-			: IHMD
-		{
-			private IHMDInfo _info;
-			private readonly ReaderWriterLockSlim _lock;
-			private DeviceResources _resources;
-
-			private bool _resetOutstanding;
-
-			#region Settings
-
-			private bool _isPredictionEnabled;
-			private TimeSpan _predictionTime;
-			private float _yawMultiplier;
-			private float _accelGain;
-
-			#endregion
-
-			#region Properties
-
-			private Vector3 _acceleration;
-			private Vector3 _angularVelocity;
-			private Quaternion _orientation;
-			private Quaternion _predictedOrientation;
-
-			#endregion
-
-			public HMD(IHMDInfo info, ReaderWriterLockSlim @lock)
-			{
-				if (info == null)
-					throw new ArgumentNullException();
-
-				if (@lock == null)
-					throw new ArgumentNullException();
-
-				_info = info;
-				_lock = @lock;
-			}
-
-			internal DeviceResources Resources
-			{
-				set
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (value == _resources)
-							return;
-
-						if (_resources != null)
-						{
-							Action<IHMD> fn = Detached;
-							if (fn != null)
-								fn(this);
-						}
-
-						_resources = value;
-
-						if (_resources != null)
-						{
-							if (_resetOutstanding)
-							{
-								_resources.Fusion.Reset();
-								_resetOutstanding = false;
-							}
-
-							// It may be possible that a newly attached device gets
-							// a different port, display position, whatever...
-							_info = _resources.Info;
-
-							// This is even more interesting. The user may have changed
-							// setting like yaw multiplier and whatnot: We want to apply
-							// those settings again.
-							_resources.Fusion.YawMultiplier = _yawMultiplier;
-							_resources.Fusion.IsPredictionEnabled = _isPredictionEnabled;
-							_resources.Fusion.PredictionTime = _predictionTime;
-							_resources.Fusion.AccelGain = _accelGain;
-
-							Action<IHMD> fn = Attached;
-							if (fn != null)
-								fn(this);
-						}
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			#region IHMD Members
-
-			public IHMDInfo Info
-			{
-				get { return _info; }
-			}
-
-			public event Action<IHMD> Attached;
-			public event Action<IHMD> Detached;
-
-			public bool IsAttached
-			{
-				get { return _resources != null; }
-			}
-
-			public Quaternion Orientation
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_orientation = _resources.Fusion.Orientation;
-
-						return _orientation;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public Quaternion PredictedOrientation
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_predictedOrientation = _resources.Fusion.Orientation;
-
-						return _predictedOrientation;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public Vector3 Acceleration
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_acceleration = _resources.Fusion.Acceleration;
-
-						return _acceleration;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public Vector3 AngularVelocity
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_angularVelocity = _resources.Fusion.AngularVelocity;
-
-						return _angularVelocity;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public float AccelGain
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_accelGain = _resources.Fusion.AccelGain;
-
-						return _accelGain;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-				set
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_resources.Fusion.AccelGain = value;
-
-						_accelGain = value;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public float YawMultiplier
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_accelGain = _resources.Fusion.AccelGain;
-
-						return _accelGain;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-				set
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_resources.Fusion.AccelGain = value;
-
-						_accelGain = value;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public bool IsPredictionEnabled
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_isPredictionEnabled = _resources.Fusion.IsPredictionEnabled;
-
-						return _isPredictionEnabled;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-				set
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_resources.Fusion.IsPredictionEnabled = value;
-
-						_isPredictionEnabled = value;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public TimeSpan PredictionTime
-			{
-				get
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_predictionTime = _resources.Fusion.PredictionTime;
-
-						return _predictionTime;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-				set
-				{
-					_lock.EnterWriteLock();
-					try
-					{
-						if (IsAttached)
-							_resources.Fusion.PredictionTime = value;
-
-						_predictionTime = value;
-					}
-					finally
-					{
-						_lock.ExitWriteLock();
-					}
-				}
-			}
-
-			public void Reset()
-			{
-				_lock.EnterWriteLock();
-				try
-				{
-					if (IsAttached)
-					{
-						_resources.Fusion.Reset();
-						_orientation = _resources.Fusion.Orientation;
-						_predictedOrientation = _resources.Fusion.PredictedOrientation;
-						_acceleration = _resources.Fusion.Acceleration;
-						_angularVelocity = _resources.Fusion.AngularVelocity;
-					}
-					else
-					{
-						_resetOutstanding = true;
-						_orientation = Quaternion.Identity;
-						_predictedOrientation = Quaternion.Identity;
-						_acceleration = new Vector3();
-						_angularVelocity = new Vector3();
-					}
-				}
-				finally
-				{
-					_lock.EnterWriteLock();
-				}
-			}
-
-			#endregion
-		}
-
-		#endregion
-
-		#region Nested type: InternalMessageHandler
-
-		private sealed class InternalMessageHandler
-			: MessageHandler
-		{
-			private readonly HMDManager _manager;
-
-			public InternalMessageHandler(HMDManager manager)
-			{
-				_manager = manager;
-			}
-
-			public override void OnMessage(IMessage message)
-			{
-				switch (message.Type)
-				{
-					case MessageType.DeviceAdded:
-					case MessageType.DeviceRemoved:
-						_manager.DeviceChanged((IMessageDeviceStatus) message);
-						break;
-				}
-			}
-
-			public override bool SupportsMessageType(MessageType type)
-			{
-				return true;
-			}
-		}
-
-		#endregion
 	}
 }

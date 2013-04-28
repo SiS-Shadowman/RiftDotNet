@@ -8,6 +8,8 @@
 	public interface ISensorDevice
 		: IDevice
 	{
+		new ISensorInfo Info { get; }
+
 		/// <summary>
 		/// CoordinateFrame defines whether messages come in the coordinate frame
 		/// of the sensor device or HMD, which has a different internal sensor.

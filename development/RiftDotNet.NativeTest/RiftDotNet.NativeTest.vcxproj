@@ -11,26 +11,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4AC4FAB6-4848-4649-8AC8-30F952E839D0}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectGuid>{CA917F26-A7DB-4CD0-954E-60D913B94C59}</ProjectGuid>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>RiftDotNetWin32</RootNamespace>
+    <RootNamespace>RiftDotNetNativeTest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -44,99 +43,81 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\OculusSDK\LibOVR\Src;D:\Code\OculusSDK\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>D:\Code\OculusSDK\LibOVR\Src;D:\Code\OculusSDK\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libovrd.lib;User32.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>libovr.lib;User32.lib;Winmm.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Code\OculusSDK\LibOVR\Lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <RegisterOutput>false</RegisterOutput>
+      <SubSystem>Console</SubSystem>
+      <EntryPointSymbol>Main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\OculusSDK\LibOVR\Src;D:\Code\OculusSDK\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>D:\Code\OculusSDK\LibOVR\Src;D:\Code\OculusSDK\LibOVR\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libovr.lib;User32.lib;Winmm.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Code\OculusSDK\LibOVR\Lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+      <EntryPointSymbol>Main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Platform\AssemblyInfo.cpp" />
-    <ClCompile Include="..\Platform\DeviceBase.cpp" />
-    <ClCompile Include="..\Platform\DeviceHandle.cpp" />
-    <ClCompile Include="..\Platform\MessageHandler.cpp" />
-    <ClCompile Include="..\Platform\MessageHandlerImpl.cpp" />
-    <ClCompile Include="..\Platform\RitDotNet.cpp" />
-    <ClCompile Include="..\Platform\stdafx.cpp">
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\NewCode\shared\bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeviceHandleTest.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RiftDotNet.NativeTest.h" />
+    <ClInclude Include="Stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="RiftDotNet.NativeTest.cpp" />
+    <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Platform\TypedDeviceHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Platform\DeviceBase.h" />
-    <ClInclude Include="..\Platform\DeviceEnumerable.h" />
-    <ClInclude Include="..\Platform\DeviceHandle.h" />
-    <ClInclude Include="..\Platform\DeviceInfo.h" />
-    <ClInclude Include="..\Platform\DeviceManager.h" />
-    <ClInclude Include="..\Platform\Factory.h" />
-    <ClInclude Include="..\Platform\HMDDevice.h" />
-    <ClInclude Include="..\Platform\HMDInfo.h" />
-    <ClInclude Include="..\Platform\Log4Net.h" />
-    <ClInclude Include="..\Platform\Message.h" />
-    <ClInclude Include="..\Platform\MessageBodyFrame.h" />
-    <ClInclude Include="..\Platform\MessageDeviceStatus.h" />
-    <ClInclude Include="..\Platform\MessageHandler.h" />
-    <ClInclude Include="..\Platform\MessageHandlerImpl.h" />
-    <ClInclude Include="..\Platform\MessageLatencyTestButton.h" />
-    <ClInclude Include="..\Platform\MessageLatencyTestColorDetected.h" />
-    <ClInclude Include="..\Platform\MessageLatencyTestSamples.h" />
-    <ClInclude Include="..\Platform\MessageLatencyTestStarted.h" />
-    <ClInclude Include="..\Platform\RiftDotNet.h" />
-    <ClInclude Include="..\Platform\SensorDevice.h" />
-    <ClInclude Include="..\Platform\SensorFusion.h" />
-    <ClInclude Include="..\Platform\SensorInfo.h" />
-    <ClInclude Include="..\Platform\Helper.h" />
-    <ClInclude Include="..\Platform\stdafx.h" />
-    <ClInclude Include="..\Platform\TypedDeviceHandle.h" />
-    <ClInclude Include="..\Platform\UnitTestDetector.h" />
-    <ClInclude Include="..\Platform\ValueWrapper.h" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Platform\ReadMe.txt" />
+    <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\NewCode\shared\bin\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX">
-      <HintPath>..\..\..\NewCode\shared\bin\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OculusSDK\LibOVR\Projects\Win32\LibOVR_Msvc2010 - x64.vcxproj">
+      <Project>{b0679e04-ae88-4509-8faf-14f4c773ef87}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\RiftDotNet.Interface\RiftDotNet.Interface.csproj">
       <Project>{c744b0c9-d3d7-482e-b75f-15479a24ec16}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RiftDotNet.Win32\RiftDotNet.Win32.vcxproj">
+      <Project>{4ac4fab6-4848-4649-8ac8-30f952e839d0}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

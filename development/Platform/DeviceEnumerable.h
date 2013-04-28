@@ -77,7 +77,8 @@ namespace RiftDotNet
 						if (_native == nullptr)
 							throw gcnew ObjectDisposedException("DeviceEnumerator");
 
-						auto type = (DeviceType)_native->GetType();
+						throw gcnew NotImplementedException();
+						/*auto type = (DeviceType)_native->GetType();
 						if (type == DeviceType::None)
 						{
 							throw gcnew InvalidOperationException();
@@ -86,6 +87,7 @@ namespace RiftDotNet
 						// It's important that we create a copy of the *current* state of the
 						// enumeration, otherwise Next() is going to influence 
 						return gcnew TypedDeviceHandle<TDevice,TInfo>(new OVR::DeviceHandle(*_native));
+						*/
 					}
 				};
 

@@ -58,6 +58,7 @@ namespace RiftDotNet
 	public interface IDeviceHandle<out TDevice, out TDeviceInfo>
 		: IDeviceHandle
 		where TDevice : IDevice
+		where TDeviceInfo : IDeviceInfo
 	{
 		new TDevice CreateDevice();
 

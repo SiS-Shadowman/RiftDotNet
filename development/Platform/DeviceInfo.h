@@ -11,7 +11,7 @@ namespace RiftDotNet
 {
 	namespace Platform
 	{
-		public ref class DeviceInfo abstract
+		public ref class DeviceInfo
 			: public IDeviceInfo
 		{
 		public:
@@ -30,7 +30,7 @@ namespace RiftDotNet
 			String^ _manufacturer;
 			const UINT _version;
 
-		protected:
+		public:
 
 			DeviceInfo(DeviceType type)
 				: _infoClassType(DeviceType::None)

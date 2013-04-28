@@ -44,10 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceKey.cs" />
+    <Compile Include="DeviceResources.cs" />
     <Compile Include="EmbeddedAssemblyLoader.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="HMD.cs" />
     <Compile Include="IHMD.cs" />
     <Compile Include="HMDManager.cs" />
+    <Compile Include="InternalMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

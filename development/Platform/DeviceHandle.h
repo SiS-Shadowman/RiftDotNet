@@ -4,6 +4,7 @@
 
 #include "RiftDotNet.h"
 #include "DeviceBase.h"
+#include "ValueWrapper.h"
 
 using namespace System;
 
@@ -17,21 +18,46 @@ namespace RiftDotNet
 		public ref class DeviceHandle
 			: public IDeviceHandle
 		{
+		private:
+
+			static log4net::ILog^ Log = log4net::LogManager::GetLogger(System::Reflection::MethodBase::GetCurrentMethod()->DeclaringType);
+
 		public:
 
-			DeviceHandle(OVR::DeviceHandle* native)
+			DeviceHandle(HandleWrapper* wrapper)
 			{
-				if (native == nullptr)
-					throw gcnew ArgumentNullException("native");
+				if (wrapper == nullptr)
+					throw gcnew ArgumentNullException("wrapper");
 
-				_native = native;
+				if (Log->IsDebugEnabled)
+				{
+					Log->DebugFormat("Wrapping device handle '{0:x}'",
+						reinterpret_cast<std::size_t>(wrapper));
+				}
+
+				_native = wrapper;
+			}
+
+			!DeviceHandle()
+			{
+				if (_native != nullptr)
+				{
+					if (Log->IsDebugEnabled)
+						Log->DebugFormat("Disposing DeviceHandle '{0:x}', Type: {1}",
+						reinterpret_cast<std::size_t>(_native),
+						DeviceType);
+
+					delete _native;
+					_native = nullptr;
+				}
 			}
 
 			~DeviceHandle()
 			{
-				delete _native;
-				_native = nullptr;
+				this->!DeviceHandle();
 			}
+
+		public:
 
 			property bool IsDisposed
 			{
@@ -48,7 +74,7 @@ namespace RiftDotNet
 					if (_native == nullptr)
 						throw gcnew ObjectDisposedException("IDeviceHandle");
 
-					return _native->IsCreated();
+					return _native->Handle().IsCreated();
 				}
 			}
 
@@ -59,7 +85,7 @@ namespace RiftDotNet
 					if (_native == nullptr)
 						throw gcnew ObjectDisposedException("IDeviceHandle");
 
-					return _native->IsAvailable();
+					return _native->Handle().IsAvailable();
 				}
 			}
 
@@ -70,7 +96,7 @@ namespace RiftDotNet
 					if (_native == nullptr)
 						throw gcnew ObjectDisposedException("IDeviceHandle");
 
-					return (RiftDotNet::DeviceType)_native->GetType();
+					return (RiftDotNet::DeviceType)_native->Handle().GetType();
 				}
 			}
 
@@ -84,12 +110,12 @@ namespace RiftDotNet
 				if (_native == nullptr)
 					throw gcnew ObjectDisposedException("IDeviceHandle");
 
-				return DeviceBase::Create(_native->CreateDevice());
+				return DeviceBase::Create(_native->Handle().CreateDevice());
 			}
 
 		protected:
 
-			property OVR::DeviceHandle* Native { OVR::DeviceHandle* get() { return _native; } }
+			property OVR::DeviceHandle& Native { OVR::DeviceHandle& get() { return _native->Handle(); } }
 
 		private:
 
@@ -97,7 +123,7 @@ namespace RiftDotNet
 
 		private:
 
-			OVR::DeviceHandle* _native;
+			HandleWrapper* _native;
 		};
 	}
 }

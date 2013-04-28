@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RiftDotNet
 {
@@ -10,6 +11,16 @@ namespace RiftDotNet
 		where T : class, IDisposable
 	{
 		private readonly T[] _data;
+
+		public DisposableArray()
+		{
+			_data = new T[0];
+		}
+
+		public DisposableArray(IEnumerable<T> data)
+		{
+			_data = data.ToArray();
+		}
 
 		public DisposableArray(T[] data)
 		{
