@@ -31,7 +31,7 @@ namespace RiftDotNet
 					if (IsDisposed)
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
-					auto tmp = _native->GetCoordinateFrame();
+					auto tmp = GetNative<OVR::SensorDevice>()->GetCoordinateFrame();
 					return Helper::FromNative(tmp);
 				}
 				virtual void set(RiftDotNet::CoordinateFrame f)
@@ -40,7 +40,7 @@ namespace RiftDotNet
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
 					auto tmp = Helper::ToNative(f);
-					_native->SetCoordinateFrame(tmp);
+					GetNative<OVR::SensorDevice>()->SetCoordinateFrame(tmp);
 				}
 			}
 
@@ -70,7 +70,7 @@ namespace RiftDotNet
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
 					OVR::SensorRange tmp;
-					_native->GetRange(&tmp);
+					GetNative<OVR::SensorDevice>()->GetRange(&tmp);
 					return Helper::FromNative(tmp);
 				}
 
@@ -79,21 +79,12 @@ namespace RiftDotNet
 					if (IsDisposed)
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
-					if (!_native->SetRange(Helper::ToNative(range)))
+					if (!GetNative<OVR::SensorDevice>()->SetRange(Helper::ToNative(range)))
 					{
 						throw gcnew Exception("Unable to change the SensorRange: Maybe the parameters are out of range?");
 					}
 				}
 			}
-
-			property OVR::SensorDevice* Native
-			{
-				OVR::SensorDevice* get() { return _native; }
-			}
-
-		private:
-
-			OVR::SensorDevice* _native;
 		};
 	}
 }

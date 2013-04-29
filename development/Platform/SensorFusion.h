@@ -35,7 +35,10 @@ namespace RiftDotNet
 			{
 				if (device != nullptr)
 				{
-					auto nativeSensor = ((SensorDevice^)device)->Native;
+					auto nativeSensor = ((SensorDevice^)device)->GetNative<OVR::SensorDevice>();
+					if (nativeSensor == nullptr)
+						throw gcnew ArgumentNullException("device", "The native pointer should not be null");
+
 					_native = new OVR::SensorFusion(nativeSensor);
 					Log->DebugFormat("Wrapping SensorFusion '{0:x}' with sensor '{1:x}' attached",
 					reinterpret_cast<std::size_t>(_native),
@@ -47,6 +50,11 @@ namespace RiftDotNet
 					Log->DebugFormat("Wrapping SensorFusion '{0:x}' without sensor attached",
 						reinterpret_cast<std::size_t>(_native));
 				}
+			}
+
+			!SensorFusion()
+			{
+				this->~SensorFusion();
 			}
 
 			~SensorFusion()
@@ -99,7 +107,7 @@ namespace RiftDotNet
 					if (IsDisposed)
 						throw gcnew ObjectDisposedException("ISensorDevice");
 
-					auto native = value != nullptr ? ((SensorDevice^)value)->Native : nullptr;
+					auto native = value != nullptr ? ((SensorDevice^)value)->GetNative<OVR::SensorDevice>() : nullptr;
 					if (!_native->AttachToSensor(native))
 					{
 						throw gcnew System::InvalidOperationException("Attaching this sensor to the given device was not possible. Mabe the sensor already has a device attached to it?");

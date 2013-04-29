@@ -69,6 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="License.txt" />
     <Content Include="OCULUS VR LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>

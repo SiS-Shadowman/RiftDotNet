@@ -40,6 +40,11 @@ namespace RiftDotNet
 				: DeviceBase(native)
 			{}
 
+			~DeviceManager()
+			{
+				
+			}
+
 			property RiftDotNet::IDeviceInfo^ Info
 			{
 				virtual RiftDotNet::IDeviceInfo^ get() override

@@ -25,7 +25,7 @@ namespace RiftDotNet
 
 			DeviceBase(OVR::DeviceBase* native);
 			!DeviceBase();
-			~DeviceBase();
+			virtual ~DeviceBase();
 
 			property DeviceType Type
 			{
@@ -123,12 +123,21 @@ namespace RiftDotNet
 
 			property OVR::DeviceBase* Native
 			{
-				OVR::DeviceBase* get() { return _native; }
+				OVR::DeviceBase* get()
+				{
+					if (IsDisposed)
+						throw gcnew ObjectDisposedException("IDeviceBase");
+
+					return _native;
+				}
 			}
 
 			template <typename T>
 			T* GetNative()
 			{
+				if (IsDisposed)
+					throw gcnew ObjectDisposedException("IDeviceBase");
+
 				return static_cast<T*>(_native);
 			}
 
