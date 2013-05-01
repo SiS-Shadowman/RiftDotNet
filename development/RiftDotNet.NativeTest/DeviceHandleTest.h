@@ -3,6 +3,7 @@
 #include <OVR_DeviceHandle.h>
 #include <OVR_Win32_Sensor.h>
 #include "../Platform/ValueWrapper.h"
+#include "DestructorTest.h"
 
 using namespace RiftDotNet::Win32;
 using namespace NUnit::Framework;
@@ -25,7 +26,9 @@ public:
 
 int Main(void)
 {
-	auto test = gcnew DeviceHandleTest();
-	test->Test();
+	Link l;
+
+	/*auto test = gcnew DeviceHandleTest();
+	test->Test();*/
 	return 0;
 }

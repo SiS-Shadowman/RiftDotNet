@@ -44,6 +44,7 @@ namespace RiftDotNet.Test.Dummy
 
 		public ISensorDevice AttachedDevice
 		{
+			get { return _sensorDevice; }
 			set { _sensorDevice = value; }
 		}
 

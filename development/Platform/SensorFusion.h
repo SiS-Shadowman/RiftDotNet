@@ -50,6 +50,8 @@ namespace RiftDotNet
 					Log->DebugFormat("Wrapping SensorFusion '{0:x}' without sensor attached",
 						reinterpret_cast<std::size_t>(_native));
 				}
+
+				_sensor = device;
 			}
 
 			!SensorFusion()
@@ -102,6 +104,10 @@ namespace RiftDotNet
 
 			property ISensorDevice^ AttachedDevice
 			{
+				virtual ISensorDevice^ get()
+				{
+					return _sensor;
+				}
 				virtual void set(ISensorDevice^ value)
 				{
 					if (IsDisposed)
@@ -110,8 +116,10 @@ namespace RiftDotNet
 					auto native = value != nullptr ? ((SensorDevice^)value)->GetNative<OVR::SensorDevice>() : nullptr;
 					if (!_native->AttachToSensor(native))
 					{
-						throw gcnew System::InvalidOperationException("Attaching this sensor to the given device was not possible. Mabe the sensor already has a device attached to it?");
+						throw gcnew System::InvalidOperationException("Attaching this sensor to the given device was not possible. Mabe the sensor already has a device attached to it? Please check the log");
 					}
+
+					_sensor = value;
 				}
 			}
 
@@ -266,6 +274,7 @@ namespace RiftDotNet
 		private:
 
 			OVR::SensorFusion* _native;
+			ISensorDevice^ _sensor;
 			bool _predictionEnabled;
 		};
 	}

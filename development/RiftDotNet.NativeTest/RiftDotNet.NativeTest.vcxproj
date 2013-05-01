@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DestructorTest.h" />
     <ClInclude Include="DeviceHandleTest.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RiftDotNet.NativeTest.h" />
